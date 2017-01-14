@@ -138,7 +138,7 @@ function loop() {
 	if (lines.length < custom_max_lines && Math.random() < 1) {
 		lines.push(new Line("normal"));
 	}
-	if (!explosion_lock && audio_lf + audio_hf > 29 && audio_lf + audio_hf > (audioSample_lf + audioSample_hf) * 1.5 && tick - last_time_explosion > 20) {
+	if (!explosion_lock && audio_lf + audio_hf > 28 && audio_lf + audio_hf > (audioSample_lf + audioSample_hf) * 1.5 && tick - last_time_explosion > 20) {
 		// Explosion
 		for (var i = 0; i < 100; i++)
 			special_lines.push(new Line("explosion"));
@@ -244,7 +244,7 @@ Line.prototype.reset = function (mode) {
 	if (this.mode == "sporadic")
 		this.lightInputMultiplier = .03 + .03 * Math.random();
 
-	this.color = opts.color.replace('hue', tick * .10 * custom_color_changing + color0);
+	this.color = opts.color.replace('hue', tick * .10 * custom_color_changing + color0 +(this.mode == "explosion"?180:0));
 	this.cumulativeTime = 0;
 
 	this.beginPhase();
