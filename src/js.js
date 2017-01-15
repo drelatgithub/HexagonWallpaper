@@ -17,8 +17,11 @@ var custom_pattern_size = 1.0;
 var custom_glowing_factor = 1.0;
 var custom_color_changing = 1.0;
 var custom_color_changing_old = 1.0;
+var custom_spawn_origin = 1;
 var custom_use_lines = false;
+var custom_audio_pulse_inverse_color = false;
 
+// Position, size and color
 var scale_factor = (w > 1200 && h > 800) ? Math.sqrt(w / 1200.0 * h / 800.0) : 1.0;
 var hex_side_length = 40 * scale_factor * custom_scale_factor;
 var point_size = scale_factor * custom_scale_factor * 2 * custom_pattern_size;
@@ -37,19 +40,26 @@ var hex_x_list = [1, 0.5, -0.5, -1, -0.5, 0.5];
 var hex_y_list = [0, sqrt3 / 2, sqrt3 / 2, 0, -sqrt3 / 2, -sqrt3 / 2];
 var hex_rad_list = [0, 1, 2, 3, 4, 5]; // How many baseRad(s)
 
+// Event timer
 var last_time_explosion = 0;
 var explosion_lock = false;
 var last_time_sporadic = 0;
 var sporadic_interval = (Math.random() * 260 + 100) | 0;
-var sporadic_duration = (Math.random() * 180 + 100) | 0;
+var sporadic_duration = (Math.random() * 200 + 100) | 0;
 var sporadic_spawning = false;
 var sporadic_min_dist = 20;
 
+// Audio sample
 var audio_lf = 0;
 var audio_hf = 0;
 
+// Spawn Loc
 var mouse_x = opts.cx;
 var mouse_y = opts.cy;
+var random_spawn_x = opts.cx;
+var random_spawn_y = opts.cy;
+var last_time_change_random_spawn = 0;
+var change_random_spawn_interval = (Math.random() * 500 + 1000) | 0;
 var sporadic_spawn_x = opts.cx;
 var sporadic_spawn_y = opts.cy;
 
@@ -85,6 +95,12 @@ window.wallpaperRegisterAudioListener(audioProcess);
 
 window.wallpaperPropertyListener = {
 	applyUserProperties: function (properties) {
+		if (properties.custom_spawn_origin) {
+			custom_spawn_origin = properties.custom_spawn_origin.value;
+		}
+		if (properties.custom_use_lines) {
+			custom_use_lines = properties.custom_use_lines.value;
+		}
 		if (properties.custom_scale_factor) {
 			custom_scale_factor = properties.custom_scale_factor.value / 100.0;
 			update_globals();
@@ -94,9 +110,6 @@ window.wallpaperPropertyListener = {
 		}
 		if (properties.custom_fade_rate) {
 			custom_fade_rate = properties.custom_fade_rate.value / 100.0;
-		}
-		if (properties.custom_use_lines) {
-			custom_use_lines = properties.custom_use_lines.value;
 		}
 		if (properties.custom_pattern_size) {
 			custom_pattern_size = properties.custom_pattern_size.value / 100.0;
@@ -115,6 +128,9 @@ window.wallpaperPropertyListener = {
 			custom_color_changing = properties.custom_color_changing.value / 100.0;
 			color0 += 0.1 * tick * (custom_color_changing_old - custom_color_changing);
 			custom_color_changing_old = custom_color_changing;
+		}
+		if (properties.custom_audio_pulse_inverse_color) {
+			custom_audio_pulse_inverse_color = properties.custom_audio_pulse_inverse_color.value;
 		}
 	}
 };
@@ -138,7 +154,7 @@ function loop() {
 	if (lines.length < custom_max_lines && Math.random() < 1) {
 		lines.push(new Line("normal"));
 	}
-	if (!explosion_lock && audio_lf + audio_hf > 28 && audio_lf + audio_hf > (audioSample_lf + audioSample_hf) * 1.5 && tick - last_time_explosion > 20) {
+	if (!explosion_lock && audio_lf + audio_hf > 29 && audio_lf + audio_hf > (audioSample_lf + audioSample_hf) * 1.5 && tick - last_time_explosion > 20) {
 		// Explosion
 		for (var i = 0; i < 100; i++)
 			special_lines.push(new Line("explosion"));
@@ -152,17 +168,34 @@ function loop() {
 		if (!sporadic_spawning) {
 			sporadic_spawn_x = Math.random() * w;
 			sporadic_spawn_y = Math.random() * h;
-			if (dist(sporadic_spawn_x, sporadic_spawn_y, mouse_x, mouse_y) > sporadic_min_dist * hex_side_length) {
-				sporadic_spawning = true;
-				last_time_sporadic = tick;
+			switch (custom_spawn_origin) {
+			case 1:
+				if (dist(sporadic_spawn_x, sporadic_spawn_y, mouse_x, mouse_y) > sporadic_min_dist * hex_side_length) {
+					sporadic_spawning = true;
+					last_time_sporadic = tick;
+				}
+				break;
+			case 2:
+				if (dist(sporadic_spawn_x, sporadic_spawn_y, opts.cx, opts.cy) > sporadic_min_dist * hex_side_length) {
+					sporadic_spawning = true;
+					last_time_sporadic = tick;
+				}
+				break;
+			case 3:
+				if (dist(sporadic_spawn_x, sporadic_spawn_y, random_spawn_x, random_spawn_y) > sporadic_min_dist * hex_side_length) {
+					sporadic_spawning = true;
+					last_time_sporadic = tick;
+				}
+				break;
 			}
+
 		}
 		if (sporadic_spawning) {
 			special_lines.push(new Line("sporadic"));
 			if (tick - last_time_sporadic > sporadic_duration) {
 				sporadic_spawning = false;
 				sporadic_interval = (Math.random() * 260 + 100) | 0;
-				sporadic_duration = (Math.random() * 180 + 100) | 0;
+				sporadic_duration = (Math.random() * 200 + 100) | 0;
 				last_time_sporadic = tick;
 			}
 		}
@@ -200,8 +233,27 @@ Line.prototype.reset = function (mode) {
 
 	this.finished = false;
 
-	var rel_x = (mouse_x - opts.cx) / hex_side_length;
-	var rel_y = (mouse_y - opts.cy) / hex_side_length;
+	var rel_x;
+    var rel_y;
+	switch (custom_spawn_origin) {
+	case 1:
+		rel_x = (mouse_x - opts.cx) / hex_side_length;
+		rel_y = (mouse_y - opts.cy) / hex_side_length;
+		break;
+	case 2:
+		rel_x = rel_y = 0;
+		break;
+	case 3:
+		if (tick - last_time_change_random_spawn > change_random_spawn_interval) {
+			random_spawn_x = Math.random() * w;
+			random_spawn_y = Math.random() * h;
+			last_time_change_random_spawn = tick;
+			change_random_spawn_interval = (Math.random() * 500 + 1000) | 0;
+		}
+		rel_x = (random_spawn_x - opts.cx) / hex_side_length;
+		rel_y = (random_spawn_y - opts.cy) / hex_side_length;
+	}
+
 	this.origin_x = rel_x;
 	this.origin_y = rel_y;
 	if (this.mode == "sporadic") {
@@ -229,7 +281,7 @@ Line.prototype.reset = function (mode) {
 		hex_mid_y = cell_y * unit_cell_h;
 	}
 
-	hex_point_index = (Math.random() * 6) | 0;
+	hex_point_index = (custom_spawn_origin == 2 ? 3 : (Math.random() * 6) | 0);
 	this.x = hex_x_list[hex_point_index] + hex_mid_x;
 	this.y = hex_y_list[hex_point_index] + hex_mid_y;
 	this.last_loc_x = opts.cx + this.x * hex_side_length;
@@ -244,7 +296,7 @@ Line.prototype.reset = function (mode) {
 	if (this.mode == "sporadic")
 		this.lightInputMultiplier = .03 + .03 * Math.random();
 
-	this.color = opts.color.replace('hue', tick * .10 * custom_color_changing + color0 +(this.mode == "explosion"?180:0));
+	this.color = opts.color.replace('hue', tick * .10 * custom_color_changing + color0 + ((custom_audio_pulse_inverse_color && this.mode == "explosion") ? 180 : 0));
 	this.cumulativeTime = 0;
 
 	this.beginPhase();
@@ -269,6 +321,8 @@ Line.prototype.beginPhase = function () {
 	var p = 1.0 * (p1 + 1) / (p1 + p2 + 2);
 	if (this.mode == "sporadic")
 		p = 1.0 * (p1 + 2.5) / (p1 + p2 + 5);
+	if (this.x == this.origin_x && this.y == this.origin_y)
+		p = 0.5;
 	this.rad += baseRad * (Math.random() < p ? 1 : -1);
 	this.addedX = Math.cos(this.rad);
 	this.addedY = Math.sin(this.rad);
@@ -295,7 +349,7 @@ Line.prototype.step = function () {
 	ctx.shadowBlur = prop * 12 * custom_scale_factor * custom_glowing_factor;
 
 	if (this.mode == "explosion") {
-		decay_factor = Math.exp(-this.cumulativeTime / (custom_use_lines? 30.0: 40.0) * custom_decay_factor);
+		decay_factor = Math.exp(-this.cumulativeTime / (custom_use_lines ? 30.0 : 40.0) * custom_decay_factor);
 		brightness = (100) * decay_factor;
 	} else if (this.mode == "sporadic") {
 		decay_factor = Math.exp(-this.cumulativeTime / 175.0 * custom_decay_factor);
@@ -333,7 +387,7 @@ Line.prototype.step = function () {
 	}
 
 	if (Math.random() < (.1 + shaking / 2.0 / hex_side_length) * custom_scale_factor)
-		ctx.fillRect(actual_pos_x + Math.random() * (hex_side_length/2 + shaking) * (Math.random() < .5 ? 1 : -1), actual_pos_y + Math.random() * (hex_side_length/2 + shaking) * (Math.random() < .5 ? 1 : -1), point_size, point_size);
+		ctx.fillRect(actual_pos_x + Math.random() * (hex_side_length / 2 + shaking) * (Math.random() < .5 ? 1 : -1), actual_pos_y + Math.random() * (hex_side_length / 2 + shaking) * (Math.random() < .5 ? 1 : -1), point_size, point_size);
 
 	this.last_loc_x = this_loc_x;
 	this.last_loc_y = this_loc_y;
