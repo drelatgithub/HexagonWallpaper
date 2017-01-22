@@ -140,6 +140,13 @@
 				"type" : "slider",
 				"value" : 100
 			},
+			"custom_use_sparkles" : 
+			{
+				"order" : 18,
+				"text" : "Sparkles beside lines",
+				"type" : "bool",
+				"value" : true
+			},
 			"custom_use_lines" : 
 			{
 				"order" : 2,
@@ -162,7 +169,7 @@
 	"tags" : [ "Cyberpunk", "Music", "Technology" ],
 	"title" : "Hexagon New",
 	"type" : "web",
-	"version" : "0.51",
+	"version" : "0.52",
 	"visibility" : "public",
 	"workshopid" : 839120792
 }

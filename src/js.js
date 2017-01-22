@@ -19,6 +19,7 @@ var custom_color_changing = 1.0;
 var custom_color_changing_old = 1.0;
 var custom_spawn_origin = 1;
 var custom_use_lines = false;
+var custom_use_sparkles = false;
 var custom_audio_pulse_inverse_color = false;
 
 // Position, size and color
@@ -100,6 +101,9 @@ window.wallpaperPropertyListener = {
 		}
 		if (properties.custom_use_lines) {
 			custom_use_lines = properties.custom_use_lines.value;
+		}
+        if (properties.custom_use_sparkles) {
+			custom_use_sparkles = properties.custom_use_sparkles.value;
 		}
 		if (properties.custom_scale_factor) {
 			custom_scale_factor = properties.custom_scale_factor.value / 100.0;
@@ -386,7 +390,7 @@ Line.prototype.step = function () {
 		ctx.fillRect(this_loc_x, this_loc_y, point_size_normal, point_size_normal);
 	}
 
-	if (Math.random() < (.1 + shaking / 2.0 / hex_side_length) * custom_scale_factor)
+	if (custom_use_sparkles && Math.random() < (.1 + shaking / 2.0 / hex_side_length) * custom_scale_factor)
 		ctx.fillRect(actual_pos_x + Math.random() * (hex_side_length / 2 + shaking) * (Math.random() < .5 ? 1 : -1), actual_pos_y + Math.random() * (hex_side_length / 2 + shaking) * (Math.random() < .5 ? 1 : -1), point_size, point_size);
 
 	this.last_loc_x = this_loc_x;
