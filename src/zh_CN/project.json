@@ -1,0 +1,175 @@
+{
+	"description" : "Modified based upon 隆冬强's work: \nhttp://steamcommunity.com/sharedfiles/filedetails/?id=837894116 \n\nI was really impressed by how simple HTML5 canvas could be used to create such beautiful visual effects by JS codings. I really loved it so I tried to use JS for the first time, and have made some modification to the original work and hope to make more modifications or to create my own works in the future. \n\n- You could make lights spawn near the cursor position. \n- Hexagon size would be bigger on large screens for better visual effect. \n- Hexagons are responsive to audio inputs.\n- You could adjust parameters to customize your own hexagons.\n\nIf you encounter problems updating this wallpaper, please try unsubscribing in the Wallpaper Engine, restarting the Wallpaper Engine and then re-subscribing it in the workshop.\nIf you encounter problems while using this wallpaper (too dark/bright, CPU intensive, etc), please leave a comment below. Thank you!\n\n这是一个很好看的六边形光效桌面ヽ(`Д´)ﾉ！它是基于“隆冬强”的原作改制而来，原作链接见上。 \n在诸多的改进之后，目前可以做到： \n\n- 光线会向四周扩展，并且可以让它们在鼠标位置产生\n- 光线会根据你的音频而产生变化\n- 可以有各种参数定制出你最喜欢的效果\n\n如果无法更新此壁纸，请尝试在Wallpaper Engine中取消订阅，重启软件，并重新订阅之。\n如果使用遇到问题（例如太亮或太暗，或是CPU过载等），请在下方留言，谢谢！",
+	"file" : "index.html",
+	"general" : 
+	{
+		"properties" : 
+		{
+            "header_miscellaneous":
+            {
+                "type":"bool",
+                "order":0,
+                "value":false,
+                "text":"<h3><br/>首选项 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>"
+            },
+            "header_visual":
+            {
+                "type":"bool",
+                "order":10,
+                "value":false,
+                "text":"<h3><br/>视觉效果 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>"
+            },
+            "header_audio_response":
+            {
+                "type":"bool",
+                "order":20,
+                "value":false,
+                "text":"<h3><br/>音频响应 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>"
+            },
+            "header_performance":
+            {
+                "type":"bool",
+                "order":30,
+                "value":false,
+                "text":"<h3><br/>性能 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>"
+            },
+            "header_others":
+            {
+                "type":"bool",
+                "order":1000,
+                "value":false,
+                "text":"<h3><br/>其他 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>"
+            },
+            "custom_spawn_origin":
+            {
+                "type":"combo",
+                "order":1,
+                "value":1,
+                "text":"光线产生位置",
+                "options":[
+                    {
+                        "value":1,
+                        "label":"光标"
+                    },
+                    {
+                        "value":2,
+                        "label":"正中"
+                    },
+                    {
+                        "value":3,
+                        "label":"随机"
+                    }
+                ]
+            },
+            "custom_audio_pulse_inverse_color":
+            {
+                "type":"bool",
+                "value":false,
+                "text":"发生脉冲时使用反色调",
+                "order":21
+            },
+			"custom_color_changing" : 
+			{
+				"max" : 400,
+				"min" : 0,
+				"order" : 13,
+				"text" : "颜色变化率%<br/><small>设置为0会锁定在当前的颜色。</small>",
+				"type" : "slider",
+				"value" : 100
+			},
+			"custom_decay_factor" : 
+			{
+				"max" : 200,
+				"min" : 50,
+				"order" : 16,
+				"text" : "光线衰减速率%<br/><small>数值小意味着光线可以行进更长距离。</small>",
+				"type" : "slider",
+				"value" : 100
+			},
+			"custom_fade_rate" : 
+			{
+				"max" : 200,
+				"min" : 50,
+				"order" : 15,
+				"text" : "褪色速率%<br/><small>数值小意味着光线会有更长的尾迹。</small>",
+				"type" : "slider",
+				"value" : 100
+			},
+			"custom_glowing_factor" : 
+			{
+				"max" : 500,
+				"min" : 50,
+				"order" : 14,
+				"text" : "模糊率%",
+				"type" : "slider",
+				"value" : 100
+			},
+			"custom_max_lines" : 
+			{
+				"max" : 800,
+				"min" : 200,
+				"order" : 31,
+				"text" : "最大光线数目<br/><small>同时存在太多光线会影响性能。</small>",
+				"type" : "slider",
+				"value" : 300
+			},
+			"custom_pattern_size" : 
+			{
+				"max" : 150,
+				"min" : 50,
+				"order" : 12,
+				"text" : "点线的粗细%",
+				"type" : "slider",
+				"value" : 100
+			},
+			"custom_scale_factor" : 
+			{
+				"max" : 140,
+				"min" : 60,
+				"order" : 11,
+				"text" : "六边形大小%",
+				"type" : "slider",
+				"value" : 100
+			},
+			"custom_speed_factor" : 
+			{
+				"max" : 125,
+				"min" : 75,
+				"order" : 17,
+				"text" : "光线传播速度%",
+				"type" : "slider",
+				"value" : 100
+			},
+			"custom_use_sparkles" : 
+			{
+				"order" : 18,
+				"text" : "光线旁随机产生亮点",
+				"type" : "bool",
+				"value" : true
+			},
+			"custom_use_lines" : 
+			{
+				"order" : 2,
+				"text" : "使用线型染色<br/><small>可能会使用更多CPU资源，但是在高清显示屏上效果好。</small>",
+				"type" : "bool",
+				"value" : false
+			},
+			"schemecolor" : 
+			{
+				"order" : 1001,
+				"text" : "ui_browse_properties_scheme_color",
+				"type" : "color",
+				"value" : "0 0 0"
+			}
+		},
+		"supportsaudioprocessing" : true
+	},
+	"monetization" : false,
+	"preview" : "preview.jpg",
+	"tags" : [ "Cyberpunk", "Music", "Technology" ],
+	"title" : "Hexagon New",
+	"type" : "web",
+	"version" : "0.52",
+	"visibility" : "public",
+	"workshopid" : 839120792
+}
