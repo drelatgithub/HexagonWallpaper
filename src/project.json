@@ -1,5 +1,5 @@
 {
-	"description" : "Modified based upon 隆冬强's work: \nhttp://steamcommunity.com/sharedfiles/filedetails/?id=837894116 \n\nI was really impressed by how simple HTML5 canvas could be used to create such beautiful visual effects by JS codings. I really loved it so I tried to use JS for the first time, and have made some modification to the original work and hope to make more modifications or to create my own works in the future. \n\n- You could make lights spawn near the cursor position. \n- Hexagon size would be bigger on large screens for better visual effect. \n- Hexagons are responsive to audio inputs.\n- You could adjust parameters to customize your own hexagons.\n\nIf you encounter problems updating this wallpaper, please try unsubscribing in the Wallpaper Engine, restarting the Wallpaper Engine and then re-subscribing it in the workshop.\nIf you encounter problems while using this wallpaper (too dark/bright, CPU intensive, etc), please leave a comment below. Thank you!\n\n这是一个很好看的六边形光效桌面ヽ(`Д´)ﾉ！它是基于“隆冬强”的原作改制而来，原作链接见上。 \n在诸多的改进之后，目前可以做到： \n\n- 光线会向四周扩展，并且可以让它们在鼠标位置产生\n- 光线会根据你的音频而产生变化\n- 可以有各种参数定制出你最喜欢的效果\n\n如果无法更新此壁纸，请尝试在Wallpaper Engine中取消订阅，重启软件，并重新订阅之。\n如果使用遇到问题（例如太亮或太暗，或是CPU过载等），请在下方留言，谢谢！",
+	"description" : "Modified based upon 隆冬强's work:\nhttp://steamcommunity.com/sharedfiles/filedetails/?id=837894116\n\nI was really impressed by how simple HTML5 canvas could be used to create such beautiful visual effects by JS codings. I really loved it so I tried to use JS for the first time, and have made some modification to the original work and hope to make more modifications or to create my own works in the future.\n\n- You could make lights spawn near the cursor position.\n- Hexagon size would be bigger on large screens for better visual effect.\n- Hexagons are responsive to audio inputs.\n- You could adjust parameters to customize your own hexagons.\n\nIf you encounter problems updating this wallpaper, please try unsubscribing in the Wallpaper Engine, restarting the Wallpaper Engine and then re-subscribing it in the workshop.\n\nIf you encounter problems while using this wallpaper (too dark/bright, CPU intensive, etc), please leave a comment below. Thank you!\n",
 	"file" : "index.html",
 	"general" : 
 	{
@@ -166,10 +166,10 @@
 	},
 	"monetization" : false,
 	"preview" : "preview.jpg",
-	"tags" : [ "Cyberpunk", "Music", "Technology" ],
+	"tags" : [ "Music", "Technology" ],
 	"title" : "Hexagon New",
 	"type" : "web",
-	"version" : "0.52",
+	"version" : "0.53",
 	"visibility" : "public",
 	"workshopid" : 839120792
 }

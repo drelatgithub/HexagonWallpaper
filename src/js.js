@@ -108,6 +108,9 @@ window.wallpaperPropertyListener = {
 		if (properties.custom_scale_factor) {
 			custom_scale_factor = properties.custom_scale_factor.value / 100.0;
 			update_globals();
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, w, h);
 		}
 		if (properties.custom_max_lines) {
 			custom_max_lines = properties.custom_max_lines.value;
@@ -406,6 +409,7 @@ window.addEventListener('resize', function () {
 	scale_factor = (w > 1200 && h > 800) ? Math.sqrt(w / 1200.0 * h / 800.0) : 1.0;
 	update_globals();
 
+    ctx.globalCompositeOperation = 'source-over';
 	ctx.fillStyle = 'black';
 	ctx.fillRect(0, 0, w, h);
 
