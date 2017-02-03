@@ -22,6 +22,8 @@ var custom_use_lines = false;
 var custom_audio_pulse_inverse_color = false;
 
 // Position, size and color
+var global_fade_default = 0.036;
+var global_bg = 0.5 / global_fade_default;
 var scale_factor = (w > 1200 && h > 800) ? Math.sqrt(w / 1200.0 * h / 800.0) : 1.0;
 var hex_side_length = 40 * scale_factor * custom_scale_factor;
 var point_size = scale_factor * custom_scale_factor * 2 * custom_pattern_size;
@@ -66,11 +68,18 @@ var sporadic_spawn_y = opts.cy;
 ctx.fillStyle = 'black';
 ctx.fillRect(0, 0, w, h);
 
-var update_globals = function () {
+var update_globals = function (redraw = false) {
 	hex_side_length = 40 * scale_factor * custom_scale_factor;
 	point_size = scale_factor * custom_scale_factor * 2 * custom_pattern_size;
 	dieX = w / 2 / hex_side_length;
 	dieY = h / 2 / hex_side_length;
+    
+    if(redraw){
+        global_bg = (0.5 / global_fade_default / custom_fade_rate)|0;
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillStyle = "rgb(num,num,num)".replace(/num/g, global_bg);
+        ctx.fillRect(0, 0, w, h);
+    }
 }
 
 c.onmousemove = function (e) {
@@ -103,13 +112,18 @@ window.wallpaperPropertyListener = {
 		}
 		if (properties.custom_scale_factor) {
 			custom_scale_factor = properties.custom_scale_factor.value / 100.0;
+<<<<<<< Updated upstream
 			update_globals();
+=======
+			update_globals(redraw=true);
+>>>>>>> Stashed changes
 		}
 		if (properties.custom_max_lines) {
 			custom_max_lines = properties.custom_max_lines.value;
 		}
 		if (properties.custom_fade_rate) {
 			custom_fade_rate = properties.custom_fade_rate.value / 100.0;
+            update_globals(redraw=true);
 		}
 		if (properties.custom_pattern_size) {
 			custom_pattern_size = properties.custom_pattern_size.value / 100.0;
@@ -146,7 +160,7 @@ function loop() {
 
 	ctx.globalCompositeOperation = 'source-over';
 	ctx.shadowBlur = 0;
-	ctx.fillStyle = 'rgba(0,0,0,alp)'.replace('alp', 0.036 * (custom_fade_rate));
+	ctx.fillStyle = 'rgba(0,0,0,alp)'.replace('alp', global_fade_default * (custom_fade_rate));
 	ctx.fillRect(0, 0, w, h);
 
 	ctx.globalCompositeOperation = 'lighter';
@@ -400,10 +414,14 @@ window.addEventListener('resize', function () {
 	w = c.width = window.innerWidth;
 	h = c.height = window.innerHeight;
 	scale_factor = (w > 1200 && h > 800) ? Math.sqrt(w / 1200.0 * h / 800.0) : 1.0;
+<<<<<<< Updated upstream
 	update_globals();
 
 	ctx.fillStyle = 'black';
 	ctx.fillRect(0, 0, w, h);
+=======
+	update_globals(redraw=true);
+>>>>>>> Stashed changes
 
 	opts.cx = w / 2;
 	opts.cy = h / 2;
