@@ -3,7 +3,7 @@ var h = c.height = window.innerHeight;
 var ctx = c.getContext('2d');
 
 var opts = {
-	color: 'hsl(hue,100%,light%)',
+	color: 'hsl(hue,sat,light%)',
 	cx: w / 2,
 	cy: h / 2,
 };
@@ -15,8 +15,11 @@ var custom_max_lines = 300;
 var custom_scale_factor = 1.0;
 var custom_pattern_size = 1.0;
 var custom_glowing_factor = 1.0;
+var custom_color_mode = 1;
 var custom_color_changing = 1.0;
 var custom_color_changing_old = 1.0;
+var custom_color_fixed_hue;
+var custom_color_fixed_sat;
 var custom_spawn_origin = 1;
 var custom_use_lines = false;
 var custom_use_sparkles = false;
@@ -30,6 +33,7 @@ var hex_side_length = 40 * scale_factor * custom_scale_factor;
 var point_size = scale_factor * custom_scale_factor * 2 * custom_pattern_size;
 var tick = 0;
 var color0 = 0;
+var color_fixed;
 var lines = [];
 var special_lines = [];
 var dieX = w / 2 / hex_side_length;
@@ -116,17 +120,7 @@ window.wallpaperPropertyListener = {
 		}
 		if (properties.custom_scale_factor) {
 			custom_scale_factor = properties.custom_scale_factor.value / 100.0;
-<<<<<<< Updated upstream
-			update_globals();
-<<<<<<< HEAD
-=======
 			update_globals(redraw=true);
->>>>>>> Stashed changes
-=======
-            ctx.globalCompositeOperation = 'source-over';
-            ctx.fillStyle = 'black';
-            ctx.fillRect(0, 0, w, h);
->>>>>>> origin/test
 		}
 		if (properties.custom_max_lines) {
 			custom_max_lines = properties.custom_max_lines.value;
@@ -148,10 +142,36 @@ window.wallpaperPropertyListener = {
 		if (properties.custom_speed_factor) {
 			custom_speed_factor = properties.custom_speed_factor.value / 100.0;
 		}
+		if (properties.custom_color_mode) {
+			custom_color_mode = properties.custom_color_mode.value;
+		}
 		if (properties.custom_color_changing) {
 			custom_color_changing = properties.custom_color_changing.value / 100.0;
 			color0 += 0.1 * tick * (custom_color_changing_old - custom_color_changing);
 			custom_color_changing_old = custom_color_changing;
+		}
+		if (properties.custom_color_fixed) {
+			var custom_color_fixed_temp = properties.custom_color_fixed.value.split(' ');
+            var r = parseFloat(custom_color_fixed_temp[0]), g = parseFloat(custom_color_fixed_temp[1]), b = parseFloat(custom_color_fixed_temp[2]);
+            // rgb to hsl
+            var maxVal = Math.max(r, g, b), minVal = Math.min(r, g, b);
+            var l = 0.5 * (maxVal + minVal);
+            if(maxVal == minVal){
+                custom_color_fixed_hue = 0;
+            }else if(maxVal == r){
+                custom_color_fixed_hue = 60 * (g-b) / (maxVal - minVal) + ((g<b)? 360 : 0);
+            }else if(maxVal == g){
+                custom_color_fixed_hue = 60 * (b-r) / (maxVal - minVal) + 120;
+            }else{
+                custom_color_fixed_hue = 60 * (r-g) / (maxVal - minVal) + 240;
+            }
+            if (l == 0 || maxVal == minVal){
+                custom_color_fixed_sat = 0;
+            }else if(l <= 0.5){
+                custom_color_fixed_sat = (maxVal - minVal) / (2*l);
+            }else{
+                custom_color_fixed_sat = (maxVal - minVal) / (2 - 2*l);
+            }
 		}
 		if (properties.custom_audio_pulse_inverse_color) {
 			custom_audio_pulse_inverse_color = properties.custom_audio_pulse_inverse_color.value;
@@ -305,7 +325,7 @@ Line.prototype.reset = function (mode) {
 		hex_mid_y = cell_y * unit_cell_h;
 	}
 
-	hex_point_index = (custom_spawn_origin == 2 ? 3 : (Math.random() * 6) | 0);
+	hex_point_index = ((custom_spawn_origin == 2 ? 3 : (Math.random() * 6)) | 0);
 	this.x = hex_x_list[hex_point_index] + hex_mid_x;
 	this.y = hex_y_list[hex_point_index] + hex_mid_y;
 	this.last_loc_x = opts.cx + this.x * hex_side_length;
@@ -320,7 +340,12 @@ Line.prototype.reset = function (mode) {
 	if (this.mode == "sporadic")
 		this.lightInputMultiplier = .03 + .03 * Math.random();
 
-	this.color = opts.color.replace('hue', tick * .10 * custom_color_changing + color0 + ((custom_audio_pulse_inverse_color && this.mode == "explosion") ? 180 : 0));
+    if(custom_color_mode==1){
+        this.color = opts.color.replace('hue', tick * .10 * custom_color_changing + color0 + ((custom_audio_pulse_inverse_color && this.mode == "explosion") ? 180 : 0)).replace('sat', '100%');
+    }else{
+        this.color = opts.color.replace('hue', custom_color_fixed_hue + ((custom_audio_pulse_inverse_color && this.mode == "explosion") ? 180 : 0)).replace('sat', custom_color_fixed_sat * 100 + '%');
+    }
+	
 	this.cumulativeTime = 0;
 
 	this.beginPhase();
@@ -424,15 +449,7 @@ window.addEventListener('resize', function () {
 	w = c.width = window.innerWidth;
 	h = c.height = window.innerHeight;
 	scale_factor = (w > 1200 && h > 800) ? Math.sqrt(w / 1200.0 * h / 800.0) : 1.0;
-<<<<<<< Updated upstream
-	update_globals();
-
-    ctx.globalCompositeOperation = 'source-over';
-	ctx.fillStyle = 'black';
-	ctx.fillRect(0, 0, w, h);
-=======
 	update_globals(redraw=true);
->>>>>>> Stashed changes
 
 	opts.cx = w / 2;
 	opts.cy = h / 2;
