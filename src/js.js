@@ -66,7 +66,7 @@ var mouse_y = opts.cy;
 var random_spawn_x = opts.cx;
 var random_spawn_y = opts.cy;
 var last_time_change_random_spawn = 0;
-var change_random_spawn_interval = (Math.random() * 500 + 1000) | 0;
+var change_random_spawn_interval = (Math.random() * 400 + 200) | 0;
 var sporadic_spawn_x = opts.cx;
 var sporadic_spawn_y = opts.cy;
 
@@ -292,7 +292,7 @@ Line.prototype.reset = function (mode) {
 			random_spawn_x = Math.random() * w;
 			random_spawn_y = Math.random() * h;
 			last_time_change_random_spawn = tick;
-			change_random_spawn_interval = (Math.random() * 500 + 1000) | 0;
+			change_random_spawn_interval = (Math.random() * 400 + 200) | 0;
 		}
 		rel_x = (random_spawn_x - opts.cx) / hex_side_length;
 		rel_y = (random_spawn_y - opts.cy) / hex_side_length;
