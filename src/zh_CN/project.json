@@ -15,21 +15,21 @@
             "header_visual":
             {
                 "type":"bool",
-                "order":10,
+                "order":100,
                 "value":false,
                 "text":"<h3><br/>视觉效果 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>"
             },
             "header_audio_response":
             {
                 "type":"bool",
-                "order":20,
+                "order":200,
                 "value":false,
                 "text":"<h3><br/>音频响应 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>"
             },
             "header_performance":
             {
                 "type":"bool",
-                "order":30,
+                "order":300,
                 "value":false,
                 "text":"<h3><br/>性能 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>"
             },
@@ -66,22 +66,49 @@
                 "type":"bool",
                 "value":false,
                 "text":"发生脉冲时使用反色调",
-                "order":21
+                "order":201
             },
 			"custom_color_changing" : 
 			{
 				"max" : 400,
-				"min" : 0,
-				"order" : 13,
-				"text" : "颜色变化率%<br/><small>设置为0会锁定在当前的颜色。</small>",
+				"min" : 20,
+				"order" : 104,
+				"text" : "颜色变化率%<br/>",
 				"type" : "slider",
-				"value" : 100
+				"value" : 100,
+                "condition":"custom_color_mode.value == 1"
 			},
+            "custom_color_mode":
+            {
+                "type":"combo",
+                "options":
+                [
+                    {
+                        "label":"循环",
+                        "value":1
+                    },
+                    {
+                        "label":"固定",
+                        "value":2
+                    }
+                ],
+                "text":"颜色模式",
+                "value":1,
+                "order":103
+            },
+            "custom_color_fixed":
+            {
+                "type":"color",
+                "value":"0.3 0.3 1",
+                "order":105,
+                "text":"六边形颜色<br/>",
+                "condition":"custom_color_mode.value == 2"
+            },
 			"custom_decay_factor" : 
 			{
 				"max" : 200,
 				"min" : 50,
-				"order" : 16,
+				"order" : 108,
 				"text" : "光线衰减速率%<br/><small>数值小意味着光线可以行进更长距离。</small>",
 				"type" : "slider",
 				"value" : 100
@@ -90,7 +117,7 @@
 			{
 				"max" : 200,
 				"min" : 50,
-				"order" : 15,
+				"order" : 107,
 				"text" : "褪色速率%<br/><small>数值小意味着光线会有更长的尾迹。</small>",
 				"type" : "slider",
 				"value" : 100
@@ -99,7 +126,7 @@
 			{
 				"max" : 500,
 				"min" : 50,
-				"order" : 14,
+				"order" : 106,
 				"text" : "模糊率%",
 				"type" : "slider",
 				"value" : 100
@@ -108,7 +135,7 @@
 			{
 				"max" : 800,
 				"min" : 200,
-				"order" : 31,
+				"order" : 301,
 				"text" : "最大光线数目<br/><small>同时存在太多光线会影响性能。</small>",
 				"type" : "slider",
 				"value" : 300
@@ -117,7 +144,7 @@
 			{
 				"max" : 150,
 				"min" : 50,
-				"order" : 12,
+				"order" : 102,
 				"text" : "点线的粗细%",
 				"type" : "slider",
 				"value" : 100
@@ -126,7 +153,7 @@
 			{
 				"max" : 140,
 				"min" : 60,
-				"order" : 11,
+				"order" : 101,
 				"text" : "六边形大小%",
 				"type" : "slider",
 				"value" : 100
@@ -135,14 +162,14 @@
 			{
 				"max" : 125,
 				"min" : 75,
-				"order" : 17,
+				"order" : 109,
 				"text" : "光线传播速度%",
 				"type" : "slider",
 				"value" : 100
 			},
 			"custom_use_sparkles" : 
 			{
-				"order" : 18,
+				"order" : 110,
 				"text" : "光线旁随机产生亮点",
 				"type" : "bool",
 				"value" : true
@@ -152,7 +179,7 @@
 				"order" : 2,
 				"text" : "使用线型染色<br/><small>可能会使用更多CPU资源，但是在高清显示屏上效果好。</small>",
 				"type" : "bool",
-				"value" : false
+				"value" : true
 			},
 			"schemecolor" : 
 			{
@@ -166,10 +193,10 @@
 	},
 	"monetization" : false,
 	"preview" : "preview.jpg",
-	"tags" : [ "Cyberpunk", "Music", "Technology" ],
+	"tags" : [ "Music", "Technology" ],
 	"title" : "Hexagon New",
 	"type" : "web",
-	"version" : "0.52",
+	"version" : "0.54",
 	"visibility" : "public",
 	"workshopid" : 839120792
 }

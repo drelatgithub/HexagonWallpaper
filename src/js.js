@@ -3,7 +3,7 @@ var h = c.height = window.innerHeight;
 var ctx = c.getContext('2d');
 
 var opts = {
-	color: 'hsl(hue,100%,light%)',
+	color: 'hsl(hue,sat,light%)',
 	cx: w / 2,
 	cy: h / 2,
 };
@@ -15,19 +15,25 @@ var custom_max_lines = 300;
 var custom_scale_factor = 1.0;
 var custom_pattern_size = 1.0;
 var custom_glowing_factor = 1.0;
+var custom_color_mode = 1;
 var custom_color_changing = 1.0;
 var custom_color_changing_old = 1.0;
+var custom_color_fixed_hue;
+var custom_color_fixed_sat;
 var custom_spawn_origin = 1;
 var custom_use_lines = false;
 var custom_use_sparkles = false;
 var custom_audio_pulse_inverse_color = false;
 
 // Position, size and color
+var global_fade_default = 0.036;
+var global_bg = 0.5 / global_fade_default;
 var scale_factor = (w > 1200 && h > 800) ? Math.sqrt(w / 1200.0 * h / 800.0) : 1.0;
 var hex_side_length = 40 * scale_factor * custom_scale_factor;
 var point_size = scale_factor * custom_scale_factor * 2 * custom_pattern_size;
 var tick = 0;
 var color0 = 0;
+var color_fixed;
 var lines = [];
 var special_lines = [];
 var dieX = w / 2 / hex_side_length;
@@ -60,18 +66,25 @@ var mouse_y = opts.cy;
 var random_spawn_x = opts.cx;
 var random_spawn_y = opts.cy;
 var last_time_change_random_spawn = 0;
-var change_random_spawn_interval = (Math.random() * 500 + 1000) | 0;
+var change_random_spawn_interval = (Math.random() * 400 + 200) | 0;
 var sporadic_spawn_x = opts.cx;
 var sporadic_spawn_y = opts.cy;
 
 ctx.fillStyle = 'black';
 ctx.fillRect(0, 0, w, h);
 
-var update_globals = function () {
+var update_globals = function (redraw = false) {
 	hex_side_length = 40 * scale_factor * custom_scale_factor;
 	point_size = scale_factor * custom_scale_factor * 2 * custom_pattern_size;
 	dieX = w / 2 / hex_side_length;
 	dieY = h / 2 / hex_side_length;
+    
+    if(redraw){
+        global_bg = (0.5 / global_fade_default / custom_fade_rate)|0;
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillStyle = "rgb(num,num,num)".replace(/num/g, global_bg);
+        ctx.fillRect(0, 0, w, h);
+    }
 }
 
 c.onmousemove = function (e) {
@@ -107,16 +120,14 @@ window.wallpaperPropertyListener = {
 		}
 		if (properties.custom_scale_factor) {
 			custom_scale_factor = properties.custom_scale_factor.value / 100.0;
-			update_globals();
-            ctx.globalCompositeOperation = 'source-over';
-            ctx.fillStyle = 'black';
-            ctx.fillRect(0, 0, w, h);
+			update_globals(redraw=true);
 		}
 		if (properties.custom_max_lines) {
 			custom_max_lines = properties.custom_max_lines.value;
 		}
 		if (properties.custom_fade_rate) {
 			custom_fade_rate = properties.custom_fade_rate.value / 100.0;
+            update_globals(redraw=true);
 		}
 		if (properties.custom_pattern_size) {
 			custom_pattern_size = properties.custom_pattern_size.value / 100.0;
@@ -131,10 +142,36 @@ window.wallpaperPropertyListener = {
 		if (properties.custom_speed_factor) {
 			custom_speed_factor = properties.custom_speed_factor.value / 100.0;
 		}
+		if (properties.custom_color_mode) {
+			custom_color_mode = properties.custom_color_mode.value;
+		}
 		if (properties.custom_color_changing) {
 			custom_color_changing = properties.custom_color_changing.value / 100.0;
 			color0 += 0.1 * tick * (custom_color_changing_old - custom_color_changing);
 			custom_color_changing_old = custom_color_changing;
+		}
+		if (properties.custom_color_fixed) {
+			var custom_color_fixed_temp = properties.custom_color_fixed.value.split(' ');
+            var r = parseFloat(custom_color_fixed_temp[0]), g = parseFloat(custom_color_fixed_temp[1]), b = parseFloat(custom_color_fixed_temp[2]);
+            // rgb to hsl
+            var maxVal = Math.max(r, g, b), minVal = Math.min(r, g, b);
+            var l = 0.5 * (maxVal + minVal);
+            if(maxVal == minVal){
+                custom_color_fixed_hue = 0;
+            }else if(maxVal == r){
+                custom_color_fixed_hue = 60 * (g-b) / (maxVal - minVal) + ((g<b)? 360 : 0);
+            }else if(maxVal == g){
+                custom_color_fixed_hue = 60 * (b-r) / (maxVal - minVal) + 120;
+            }else{
+                custom_color_fixed_hue = 60 * (r-g) / (maxVal - minVal) + 240;
+            }
+            if (l == 0 || maxVal == minVal){
+                custom_color_fixed_sat = 0;
+            }else if(l <= 0.5){
+                custom_color_fixed_sat = (maxVal - minVal) / (2*l);
+            }else{
+                custom_color_fixed_sat = (maxVal - minVal) / (2 - 2*l);
+            }
 		}
 		if (properties.custom_audio_pulse_inverse_color) {
 			custom_audio_pulse_inverse_color = properties.custom_audio_pulse_inverse_color.value;
@@ -153,7 +190,7 @@ function loop() {
 
 	ctx.globalCompositeOperation = 'source-over';
 	ctx.shadowBlur = 0;
-	ctx.fillStyle = 'rgba(0,0,0,alp)'.replace('alp', 0.036 * (custom_fade_rate));
+	ctx.fillStyle = 'rgba(0,0,0,alp)'.replace('alp', global_fade_default * (custom_fade_rate));
 	ctx.fillRect(0, 0, w, h);
 
 	ctx.globalCompositeOperation = 'lighter';
@@ -255,7 +292,7 @@ Line.prototype.reset = function (mode) {
 			random_spawn_x = Math.random() * w;
 			random_spawn_y = Math.random() * h;
 			last_time_change_random_spawn = tick;
-			change_random_spawn_interval = (Math.random() * 500 + 1000) | 0;
+			change_random_spawn_interval = (Math.random() * 400 + 200) | 0;
 		}
 		rel_x = (random_spawn_x - opts.cx) / hex_side_length;
 		rel_y = (random_spawn_y - opts.cy) / hex_side_length;
@@ -288,7 +325,7 @@ Line.prototype.reset = function (mode) {
 		hex_mid_y = cell_y * unit_cell_h;
 	}
 
-	hex_point_index = (custom_spawn_origin == 2 ? 3 : (Math.random() * 6) | 0);
+	hex_point_index = ((custom_spawn_origin == 2 ? 3 : (Math.random() * 6)) | 0);
 	this.x = hex_x_list[hex_point_index] + hex_mid_x;
 	this.y = hex_y_list[hex_point_index] + hex_mid_y;
 	this.last_loc_x = opts.cx + this.x * hex_side_length;
@@ -303,7 +340,12 @@ Line.prototype.reset = function (mode) {
 	if (this.mode == "sporadic")
 		this.lightInputMultiplier = .03 + .03 * Math.random();
 
-	this.color = opts.color.replace('hue', tick * .10 * custom_color_changing + color0 + ((custom_audio_pulse_inverse_color && this.mode == "explosion") ? 180 : 0));
+    if(custom_color_mode==1){
+        this.color = opts.color.replace('hue', tick * .10 * custom_color_changing + color0 + ((custom_audio_pulse_inverse_color && this.mode == "explosion") ? 180 : 0)).replace('sat', '100%');
+    }else{
+        this.color = opts.color.replace('hue', custom_color_fixed_hue + ((custom_audio_pulse_inverse_color && this.mode == "explosion") ? 180 : 0)).replace('sat', custom_color_fixed_sat * 100 + '%');
+    }
+	
 	this.cumulativeTime = 0;
 
 	this.beginPhase();
@@ -407,11 +449,7 @@ window.addEventListener('resize', function () {
 	w = c.width = window.innerWidth;
 	h = c.height = window.innerHeight;
 	scale_factor = (w > 1200 && h > 800) ? Math.sqrt(w / 1200.0 * h / 800.0) : 1.0;
-	update_globals();
-
-    ctx.globalCompositeOperation = 'source-over';
-	ctx.fillStyle = 'black';
-	ctx.fillRect(0, 0, w, h);
+	update_globals(redraw=true);
 
 	opts.cx = w / 2;
 	opts.cy = h / 2;
