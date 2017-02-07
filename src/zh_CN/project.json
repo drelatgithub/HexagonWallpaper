@@ -179,7 +179,7 @@
 				"order" : 2,
 				"text" : "使用线型染色<br/><small>可能会使用更多CPU资源，但是在高清显示屏上效果好。</small>",
 				"type" : "bool",
-				"value" : false
+				"value" : true
 			},
 			"schemecolor" : 
 			{

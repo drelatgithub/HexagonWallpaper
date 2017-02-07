@@ -138,7 +138,7 @@
 				"order" : 2,
 				"text" : "Use lines instead of dots<br/><small>Would be more CPU consuming, but would look much better on HD screens.</small>",
 				"type" : "bool",
-				"value" : false
+				"value" : true
 			},
 			"custom_use_sparkles" : 
 			{
