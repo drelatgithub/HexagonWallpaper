@@ -147,6 +147,13 @@
 				"type" : "bool",
 				"value" : true
 			},
+            "custom_use_greyish_bg":
+            {
+                "order":111,
+                "text":"Greyish background<br/><small>To ease the trailing effect</small>",
+                "type":"bool",
+                "value":true
+            },
 			"header_audio_response" : 
 			{
 				"order" : 200,

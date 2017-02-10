@@ -23,6 +23,7 @@ var custom_color_fixed_sat;
 var custom_spawn_origin = 1;
 var custom_use_lines = false;
 var custom_use_sparkles = false;
+var custom_use_greyish_bg = true;
 var custom_audio_pulse_inverse_color = false;
 
 // Position, size and color
@@ -80,7 +81,7 @@ var update_globals = function (redraw = false) {
 	dieY = h / 2 / hex_side_length;
     
     if(redraw){
-        global_bg = (0.5 / global_fade_default / custom_fade_rate)|0;
+        global_bg = custom_use_greyish_bg ? ((0.5 / global_fade_default / custom_fade_rate)|0) : 0;
         ctx.globalCompositeOperation = 'source-over';
         ctx.fillStyle = "rgb(num,num,num)".replace(/num/g, global_bg);
         ctx.fillRect(0, 0, w, h);
@@ -117,6 +118,10 @@ window.wallpaperPropertyListener = {
 		}
         if (properties.custom_use_sparkles) {
 			custom_use_sparkles = properties.custom_use_sparkles.value;
+		}
+        if (properties.custom_use_greyish_bg) {
+			custom_use_greyish_bg = properties.custom_use_greyish_bg.value;
+            update_globals(redraw=true);
 		}
 		if (properties.custom_scale_factor) {
 			custom_scale_factor = properties.custom_scale_factor.value / 100.0;
@@ -190,7 +195,7 @@ function loop() {
 
 	ctx.globalCompositeOperation = 'source-over';
 	ctx.shadowBlur = 0;
-	ctx.fillStyle = 'rgba(0,0,0,alp)'.replace('alp', global_fade_default * (custom_fade_rate));
+	ctx.fillStyle = 'rgba(0,0,0,alp)'.replace('alp', global_fade_default * custom_fade_rate);
 	ctx.fillRect(0, 0, w, h);
 
 	ctx.globalCompositeOperation = 'lighter';
