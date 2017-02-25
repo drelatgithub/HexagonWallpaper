@@ -258,7 +258,7 @@ function loop() {
 		} else
 			++index;
 	}
-	var index = 0;
+	index = 0;
 	while (index < special_lines.length) {
 		special_lines[index].step();
 		if (special_lines[index].finished) {
@@ -329,6 +329,11 @@ Line.prototype.reset = function (mode) {
 		hex_mid_x = cell_x * unit_cell_w + 1;
 		hex_mid_y = cell_y * unit_cell_h;
 	}
+    
+    if(custom_spawn_origin==1 || custom_spawn_origin==3){
+        this.origin_x = hex_mid_x;
+        this.origin_y = hex_mid_y;
+    }
 
 	hex_point_index = ((custom_spawn_origin == 2 ? 3 : (Math.random() * 6)) | 0);
 	this.x = hex_x_list[hex_point_index] + hex_mid_x;
