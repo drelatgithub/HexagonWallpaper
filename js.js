@@ -25,6 +25,13 @@ var custom_use_lines = false;
 var custom_use_sparkles = false;
 var custom_use_greyish_bg = true;
 var custom_audio_pulse_inverse_color = false;
+var custom_fps_limit_on = false;
+var custom_fps_limit = 20;
+// Derived custom settings
+var custom_mspf_limit = 50;
+
+// Animation timers
+var now, then, elapsed;
 
 // Position, size and color
 var global_fade_default = 0.036;
@@ -127,9 +134,6 @@ window.wallpaperPropertyListener = {
 			custom_scale_factor = properties.custom_scale_factor.value / 100.0;
 			update_globals(redraw=true);
 		}
-		if (properties.custom_max_lines) {
-			custom_max_lines = properties.custom_max_lines.value;
-		}
 		if (properties.custom_fade_rate) {
 			custom_fade_rate = properties.custom_fade_rate.value / 100.0;
             update_globals(redraw=true);
@@ -181,6 +185,16 @@ window.wallpaperPropertyListener = {
 		if (properties.custom_audio_pulse_inverse_color) {
 			custom_audio_pulse_inverse_color = properties.custom_audio_pulse_inverse_color.value;
 		}
+		if (properties.custom_max_lines) {
+			custom_max_lines = properties.custom_max_lines.value;
+		}
+		if (properties.custom_fps_limit_on) {
+			custom_fps_limit_on = properties.custom_fps_limit_on.value;
+		}
+		if (properties.custom_fps_limit) {
+			custom_fps_limit = properties.custom_fps_limit.value;
+            custom_mspf_limit = 1000.0 / custom_fps_limit;
+		}
 	}
 };
 
@@ -190,6 +204,14 @@ var dist = function (x1, y1, x2, y2) {
 
 function loop() {
 	window.requestAnimationFrame(loop);
+    
+    // FPS limit
+    now = performance.now();
+    elapsed = now - then;
+    if(custom_fps_limit_on && elapsed <= custom_mspf_limit){
+        return;
+    }
+    then = now - (elapsed % custom_mspf_limit);
 
 	++tick;
 
@@ -451,6 +473,8 @@ Line.prototype.step = function () {
 	this.last_loc_x = this_loc_x;
 	this.last_loc_y = this_loc_y;
 }
+
+then = performance.now();
 
 loop();
 

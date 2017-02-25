@@ -84,6 +84,23 @@
 				"type" : "slider",
 				"value" : 300
 			},
+			"custom_fps_limit_on" : 
+			{
+				"order" : 302,
+				"text" : "Impose FPS limit",
+				"type" : "bool",
+				"value" : false
+			},
+			"custom_fps_limit" : 
+			{
+				"max" : 60,
+				"min" : 12,
+				"order" : 303,
+				"text" : "FPS limit",
+				"type" : "slider",
+				"value" : 20,
+                "condition" : "custom_fps_limit_on.value == true"
+			},
 			"custom_pattern_size" : 
 			{
 				"max" : 150,
@@ -126,8 +143,8 @@
 			},
 			"custom_speed_factor" : 
 			{
-				"max" : 125,
-				"min" : 75,
+				"max" : 150,
+				"min" : 60,
 				"order" : 109,
 				"text" : "Light propagating speed %",
 				"type" : "slider",
