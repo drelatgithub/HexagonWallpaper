@@ -2,6 +2,31 @@ var w = c.width = window.innerWidth;
 var h = c.height = window.innerHeight;
 var ctx = c.getContext('2d');
 
+var log_height = 20;
+var log_display_tick = 200;
+var log_fade_tick = 100;
+var log = document.getElementById("log");
+var logs = [];
+
+function log_msg(msg){
+    logs.push(new log_box(msg));
+    var len = logs.length;
+    for(var i=0; i<len-1; i++){
+        logs[i].box.style.bottom = log_height * (len-i-1) + "px";
+    }
+}
+
+function log_box(msg){
+    this.box = document.createElement("div");
+    this.box.style.bottom = 0;
+    this.box.style.right = 0;
+    var content = document.createTextNode(msg);
+    this.box.appendChild(content);
+    this.time = 0;
+    log.appendChild(this.box);
+}
+
+
 var opts = {
 	color: 'hsl(hue,sat,light%)',
 	cx: w / 2,
@@ -204,6 +229,22 @@ var dist = function (x1, y1, x2, y2) {
 
 function loop() {
 	window.requestAnimationFrame(loop);
+    var index = 0;
+    
+    // Log life span
+    index = 0;
+    while(index < logs.length){
+        logs[index].time++;
+        if(logs[index].time > log_fade_tick + log_display_tick){
+            log.removeChild(logs[index].box);
+            logs.splice(index, 1);
+        }else{
+            if(logs[index].time > log_display_tick){
+                logs[index].box.style.opacity = 1 - (logs[index].time - log_display_tick) / log_fade_tick;
+            }
+            index++;
+        }
+    }
     
     // FPS limit
     now = performance.now();
@@ -272,7 +313,7 @@ function loop() {
 		}
 	}
 
-	var index = 0;
+	index = 0;
 	while (index < lines.length) {
 		lines[index].step();
 		if (lines[index].finished) {
