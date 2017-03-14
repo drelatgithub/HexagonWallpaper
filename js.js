@@ -1,6 +1,7 @@
-var w = c.width = window.innerWidth;
-var h = c.height = window.innerHeight;
+var w = c2.width = c.width = window.innerWidth;
+var h = c2.height = c.height = window.innerHeight;
 var ctx = c.getContext('2d');
+var ctx2 = c2.getContext('2d');
 
 var log_height = 20;
 var log_display_tick = 200;
@@ -52,6 +53,7 @@ var custom_use_greyish_bg = true;
 var custom_audio_pulse_inverse_color = false;
 var custom_fps_limit_on = false;
 var custom_fps_limit = 20;
+var custom_use_background_image = false;
 // Derived custom settings
 var custom_mspf_limit = 50;
 
@@ -59,7 +61,7 @@ var custom_mspf_limit = 50;
 var now, then, elapsed;
 
 // Position, size and color
-var global_fade_default = 0.036;
+var global_fade_default = 0.04;
 var global_bg = 0.5 / global_fade_default;
 var scale_factor = (w > 1200 && h > 800) ? Math.sqrt(w / 1200.0 * h / 800.0) : 1.0;
 var hex_side_length = 40 * scale_factor * custom_scale_factor;
@@ -103,8 +105,17 @@ var change_random_spawn_interval = (Math.random() * 400 + 200) | 0;
 var sporadic_spawn_x = opts.cx;
 var sporadic_spawn_y = opts.cy;
 
-ctx.fillStyle = 'black';
-ctx.fillRect(0, 0, w, h);
+if(custom_use_background_image){
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, w, h);
+}
+
+// Background image
+var bg_img = new Image();
+bg_img.onload = function(){
+    if(custom_use_background_image)
+        ctx2.drawImage(bg_img,0,0,w,h);
+}
 
 var update_globals = function (redraw = false) {
 	hex_side_length = 40 * scale_factor * custom_scale_factor;
@@ -113,10 +124,15 @@ var update_globals = function (redraw = false) {
 	dieY = h / 2 / hex_side_length;
     
     if(redraw){
-        global_bg = custom_use_greyish_bg ? ((0.5 / global_fade_default / custom_fade_rate)|0) : 0;
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.fillStyle = "rgb(num,num,num)".replace(/num/g, global_bg);
-        ctx.fillRect(0, 0, w, h);
+        ctx.clearRect(0,0,w,h);
+        if(custom_use_background_image){
+            ctx2.drawImage(bg_img,0,0,w,h);
+        }else{
+            global_bg = custom_use_greyish_bg ? ((0.5 / global_fade_default / custom_fade_rate)|0) : 0;
+            ctx2.globalCompositeOperation = 'source-over';
+            ctx2.fillStyle = "rgb(num,num,num)".replace(/num/g, global_bg);
+            ctx2.fillRect(0, 0, w, h);
+        }
     }
 }
 
@@ -220,6 +236,13 @@ window.wallpaperPropertyListener = {
 			custom_fps_limit = properties.custom_fps_limit.value;
             custom_mspf_limit = 1000.0 / custom_fps_limit;
 		}
+        if (properties.custom_use_background_image){
+            custom_use_background_image = properties.custom_use_background_image.value;
+            update_globals(redraw=true);
+        }
+        if (properties.custom_background_image){
+            bg_img.src = "file:///" + properties.custom_background_image.value;
+        }
 	}
 };
 
@@ -255,10 +278,14 @@ function loop() {
     then = now - (elapsed % custom_mspf_limit);
 
 	++tick;
-
-	ctx.globalCompositeOperation = 'source-over';
+    
+    // Fading
+	//ctx.globalCompositeOperation = 'source-over';
+    ctx.globalCompositeOperation = 'destination-out';
 	ctx.shadowBlur = 0;
-	ctx.fillStyle = 'rgba(0,0,0,alp)'.replace('alp', global_fade_default * custom_fade_rate);
+    ctx.globalAlpha = global_fade_default * custom_fade_rate;
+	//ctx.fillStyle = 'rgba(0,0,0,alp)'.replace('alp', global_fade_default * custom_fade_rate);
+    ctx.fillStyle = 'white';
 	ctx.fillRect(0, 0, w, h);
 
 	ctx.globalCompositeOperation = 'lighter';
@@ -465,20 +492,26 @@ Line.prototype.step = function () {
 	wave = Math.sin(prop * Math.PI / 2),
 	x = this.addedX * wave,
 	y = this.addedY * wave;
-
-	var decay_factor = Math.exp(-this.cumulativeTime / 90.0 * custom_decay_factor);
-	var brightness = ((custom_use_lines ? 20 : 30) + 10 * Math.sin(this.cumulativeTime * this.lightInputMultiplier) + (audio_hf + 0.2 * audio_lf) * 7.0) * decay_factor;
+    
+    // Set blurring (canvas)
 	ctx.shadowBlur = prop * 12 * custom_scale_factor * custom_glowing_factor;
-
+    
+    // Set decay and brightness
+	var decay_factor = Math.exp(-this.cumulativeTime / 90.0 * custom_decay_factor);
+	var brightness = ((custom_use_lines ? 20 : 30) + 10 * Math.sin(this.cumulativeTime * this.lightInputMultiplier) + (audio_hf + 0.2 * audio_lf) * 7.0);
 	if (this.mode == "explosion") {
 		decay_factor = Math.exp(-this.cumulativeTime / (custom_use_lines ? 30.0 : 40.0) * custom_decay_factor);
-		brightness = (100) * decay_factor;
+		brightness = (100);
 	} else if (this.mode == "sporadic") {
 		decay_factor = Math.exp(-this.cumulativeTime / 175.0 * custom_decay_factor);
-		brightness = (6 + 2 * Math.sin(this.cumulativeTime * this.lightInputMultiplier)) * decay_factor;
+		brightness = (6 + 2 * Math.sin(this.cumulativeTime * this.lightInputMultiplier));
 	}
-
+    
+    // Set color and global transparency (canvas)
 	ctx.fillStyle = ctx.shadowColor = this.color.replace('light', brightness);
+    ctx.globalAlpha = decay_factor;
+    
+    // Set position
 	var actual_pos_x = opts.cx + (this.x + x) * hex_side_length;
 	var actual_pos_y = opts.cy + (this.y + y) * hex_side_length;
 	var shaking = hex_side_length * ((audio_lf + 0.2 * audio_hf) / 32.0) * Math.random() * (Math.random() < 0.5 ? 1 : -1) * decay_factor;
@@ -489,12 +522,17 @@ Line.prototype.step = function () {
 	} else {
 		this.shaking = shaking;
 	}
-
+    
+    // Set size
 	var point_size_normal = point_size * (audio_hf / 40 + 1);
+    
+    // Adjust position and size
 	if (this.mode == "sporadic") {
 		this.shaking = 0;
 		point_size_normal = point_size;
 	}
+    
+    // Set final drawing position and draw
 	var this_loc_x = actual_pos_x + Math.sin(this.rad) * this.shaking;
 	var this_loc_y = actual_pos_y + Math.cos(this.rad) * this.shaking;
 	if (custom_use_lines) {
@@ -507,10 +545,12 @@ Line.prototype.step = function () {
 	} else {
 		ctx.fillRect(this_loc_x, this_loc_y, point_size_normal, point_size_normal);
 	}
-
+    
+    // Draw sparkles
 	if (custom_use_sparkles && Math.random() < (.1 + shaking / 2.0 / hex_side_length) * custom_scale_factor)
 		ctx.fillRect(actual_pos_x + Math.random() * (hex_side_length / 2 + shaking) * (Math.random() < .5 ? 1 : -1), actual_pos_y + Math.random() * (hex_side_length / 2 + shaking) * (Math.random() < .5 ? 1 : -1), point_size, point_size);
-
+    
+    // Update last position
 	this.last_loc_x = this_loc_x;
 	this.last_loc_y = this_loc_y;
 }
