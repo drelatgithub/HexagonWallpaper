@@ -129,9 +129,10 @@ var update_globals = function (redraw = false) {
             ctx2.drawImage(bg_img,0,0,w,h);
         }else{
             global_bg = custom_use_greyish_bg ? ((0.5 / global_fade_default / custom_fade_rate)|0) : 0;
-            ctx2.globalCompositeOperation = 'source-over';
-            ctx2.fillStyle = "rgb(num,num,num)".replace(/num/g, global_bg);
-            ctx2.fillRect(0, 0, w, h);
+            ctx.globalAlpha = 1;
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = "rgb(num,num,num)".replace(/num/g, global_bg);
+            ctx.fillRect(0, 0, w, h);
         }
     }
 }
@@ -280,13 +281,19 @@ function loop() {
 	++tick;
     
     // Fading
-	//ctx.globalCompositeOperation = 'source-over';
-    ctx.globalCompositeOperation = 'destination-out';
-	ctx.shadowBlur = 0;
-    ctx.globalAlpha = global_fade_default * custom_fade_rate;
-	//ctx.fillStyle = 'rgba(0,0,0,alp)'.replace('alp', global_fade_default * custom_fade_rate);
-    ctx.fillStyle = 'white';
-	ctx.fillRect(0, 0, w, h);
+    if(custom_use_background_image){
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = global_fade_default * custom_fade_rate;
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, w, h);
+    }else{
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = 'rgba(0,0,0,alp)'.replace('alp', global_fade_default * custom_fade_rate);
+        ctx.fillRect(0, 0, w, h);
+    }
 
 	ctx.globalCompositeOperation = 'lighter';
 
@@ -506,10 +513,17 @@ Line.prototype.step = function () {
 		decay_factor = Math.exp(-this.cumulativeTime / 175.0 * custom_decay_factor);
 		brightness = (6 + 2 * Math.sin(this.cumulativeTime * this.lightInputMultiplier));
 	}
+    if(custom_use_background_image && brightness < 50)
+        brightness = 50; // Prevent lines from looking blackish and dirty
     
     // Set color and global transparency (canvas)
+    if(custom_use_background_image){
+        ctx.globalAlpha = decay_factor;
+    }else{
+        brightness *= decay_factor;
+        ctx.globalAlpha = 1;
+    }
 	ctx.fillStyle = ctx.shadowColor = this.color.replace('light', brightness);
-    ctx.globalAlpha = decay_factor;
     
     // Set position
 	var actual_pos_x = opts.cx + (this.x + x) * hex_side_length;

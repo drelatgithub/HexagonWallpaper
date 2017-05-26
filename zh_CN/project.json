@@ -5,6 +5,20 @@
 	{
 		"properties" : 
 		{
+            "custom_background_image":
+            {
+                "text": "背景图片",
+                "type": "file",
+                "order": 113,
+                "condition": "custom_use_background_image.value == true"
+            },
+            "custom_use_background_image":
+            {
+                "order" : 111,
+                "text" : "自定义背景",
+                "type" : "bool",
+                "value": false
+            },
             "header_miscellaneous":
             {
                 "type":"bool",
@@ -193,9 +207,10 @@
 			},
             "custom_use_greyish_bg":
             {
-                "order":111,
+                "order":112,
                 "text":"灰色背景<br/><small>减少光线尾迹</small>",
                 "type":"bool",
+                "condition": "custom_use_background_image.value == false",
                 "value":true
             },
 			"custom_use_lines" : 
