@@ -118,6 +118,40 @@
                 "text":"六边形颜色<br/>",
                 "condition":"custom_color_mode.value == 2"
             },
+            "custom_displacement_x":
+            {
+                "text": "水平位移%",
+                "type": "slider",
+                "max": 300,
+                "min": 0,
+                "value": 0,
+                "order": 115
+            },
+            "custom_displacement_y":
+            {
+                "text": "竖直位移%",
+                "type": "slider",
+                "max": 173,
+                "min": 0,
+                "value": 0,
+                "order": 116
+            },
+            "custom_rotation":
+            {
+                "text": "旋转角度<br/><small>旋转在位移之前</small>",
+                "type": "slider",
+                "max": 120,
+                "min": 0,
+                "value": 0,
+                "order": 114
+            },
+            "custom_use_careful_calc" : 
+			{
+				"order" : 304,
+				"text" : "使用更细致的计算",
+				"type" : "bool",
+				"value" : false
+			},
 			"custom_decay_factor" : 
 			{
 				"max" : 200,
