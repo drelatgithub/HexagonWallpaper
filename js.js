@@ -40,6 +40,9 @@ var custom_speed_factor = 1.0;
 var custom_max_lines = 300;
 var custom_scale_factor = 1.0;
 var custom_pattern_size = 1.0;
+var custom_displacement_x = 0.0;
+var custom_displacement_y = 0.0;
+var custom_rotation = 0.0;
 var custom_glowing_factor = 1.0;
 var custom_color_mode = 1;
 var custom_color_changing = 1.0;
@@ -47,6 +50,7 @@ var custom_color_changing_old = 1.0;
 var custom_color_fixed_hue;
 var custom_color_fixed_sat;
 var custom_spawn_origin = 1;
+var custom_use_careful_calc = false;
 var custom_use_lines = false;
 var custom_use_sparkles = false;
 var custom_use_greyish_bg = true;
@@ -56,6 +60,8 @@ var custom_fps_limit = 20;
 var custom_use_background_image = false;
 // Derived custom settings
 var custom_mspf_limit = 50;
+var custom_rotation_cos = 1.0;
+var custom_rotation_sin = 0.0;
 
 // Animation timers
 var now, then, elapsed;
@@ -172,9 +178,26 @@ window.wallpaperPropertyListener = {
 			custom_use_greyish_bg = properties.custom_use_greyish_bg.value;
             update_globals(redraw=true);
 		}
+		if (properties.custom_use_careful_calc) {
+			custom_use_careful_calc = properties.custom_use_careful_calc.value;
+		}
 		if (properties.custom_scale_factor) {
 			custom_scale_factor = properties.custom_scale_factor.value / 100.0;
 			update_globals(redraw=true);
+		}
+		if (properties.custom_displacement_x) {
+			custom_displacement_x = properties.custom_displacement_x.value / 100.0;
+			update_globals(redraw=false);
+		}
+		if (properties.custom_displacement_y) {
+			custom_displacement_y = properties.custom_displacement_y.value / 100.0;
+			update_globals(redraw=false);
+		}
+		if (properties.custom_rotation) {
+			custom_rotation = properties.custom_rotation.value / 180 * Math.PI;
+            custom_rotation_cos = Math.cos(custom_rotation);
+            custom_rotation_sin = Math.sin(custom_rotation);
+			update_globals(redraw=false);
 		}
 		if (properties.custom_fade_rate) {
 			custom_fade_rate = properties.custom_fade_rate.value / 100.0;
@@ -249,6 +272,18 @@ window.wallpaperPropertyListener = {
 
 var dist = function (x1, y1, x2, y2) {
 	return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+}
+var trans_x = function(x, y){
+    return x * custom_rotation_cos - y * custom_rotation_sin + custom_displacement_x;
+}
+var trans_y = function(x, y){
+    return x * custom_rotation_sin + y * custom_rotation_cos + custom_displacement_y;
+}
+var trans_rev_x = function(x, y){
+    return (x - custom_displacement_x) * custom_rotation_cos + (y - custom_displacement_y) * custom_rotation_sin;
+}
+var trans_rev_y = function(x, y){
+    return -(x - custom_displacement_x) * custom_rotation_sin + (y - custom_displacement_x) * custom_rotation_cos;
 }
 
 function loop() {
@@ -406,11 +441,15 @@ Line.prototype.reset = function (mode) {
 		rel_x = (sporadic_spawn_x - opts.cx) / hex_side_length;
 		rel_y = (sporadic_spawn_y - opts.cy) / hex_side_length;
 	}
+    
+    // rel_x and rel_y are the actual unscaled positions. rel_x_rev and rel_y_rev are the positions after the reversed transformation
+    var rel_x_rev = trans_rev_x(rel_x, rel_y);
+    var rel_y_rev = trans_rev_y(rel_x, rel_y);
 
-	var cell_x = Math.floor(rel_x / unit_cell_w);
-	var cell_y = Math.floor(rel_y / unit_cell_h);
-	var incell_x = rel_x - cell_x * unit_cell_w;
-	var incell_y = rel_y - cell_y * unit_cell_h;
+	var cell_x = Math.floor(rel_x_rev / unit_cell_w);
+	var cell_y = Math.floor(rel_y_rev / unit_cell_h);
+	var incell_x = rel_x_rev - cell_x * unit_cell_w;
+	var incell_y = rel_y_rev - cell_y * unit_cell_h;
 	var hex_mid_x = 0;
 	var hex_mid_y = 0;
 	if (incell_y > sqrt3 * incell_x && incell_y < -sqrt3 * incell_x + sqrt3) {
@@ -426,21 +465,40 @@ Line.prototype.reset = function (mode) {
 		hex_mid_x = cell_x * unit_cell_w + 1;
 		hex_mid_y = cell_y * unit_cell_h;
 	}
-    
-    if(custom_spawn_origin==1 || custom_spawn_origin==3){
-        this.origin_x = hex_mid_x;
-        this.origin_y = hex_mid_y;
-    }
 
-	hex_point_index = ((custom_spawn_origin == 2 ? 3 : (Math.random() * 6)) | 0);
-	this.x = hex_x_list[hex_point_index] + hex_mid_x;
-	this.y = hex_y_list[hex_point_index] + hex_mid_y;
+	var hex_point_index = (Math.random() * 6) | 0;
+    if(custom_use_careful_calc || custom_spawn_origin==2){
+        var d = new Array(6);
+        var p = new Array(6);
+        var p_sum = 0;
+        for(var i=0;i<6;i++){
+            d[i] = dist(rel_x_rev, rel_y_rev, hex_x_list[i] + hex_mid_x, hex_y_list[i] + hex_mid_y);
+            p[i] = d[i]<1.2 ? 1.0/(d[i]+0.01) : 0;
+            p_sum += p[i];
+        }
+        var p_rnd = Math.random() * p_sum;
+        p_sum = 0;
+        for(var i=0;i<6;i++){
+            p_sum += p[i];
+            if(p_sum > p_rnd){
+                hex_point_index = i;
+                break;
+            }
+        }
+    }else{
+        this.origin_x = trans_x(hex_mid_x, hex_mid_y);
+        this.origin_y = trans_y(hex_mid_x, hex_mid_y);
+    }
+	var x_rev = hex_x_list[hex_point_index] + hex_mid_x;
+    var y_rev = hex_y_list[hex_point_index] + hex_mid_y;
+    this.x = trans_x(x_rev, y_rev);
+    this.y = trans_y(x_rev, y_rev);
 	this.last_loc_x = opts.cx + this.x * hex_side_length;
 	this.last_loc_y = opts.cy + this.y * hex_side_length;
 	this.addedX = 0;
 	this.addedY = 0;
 
-	this.rad = baseRad * ((Math.random() * 3 | 0) * 2 + 1 + hex_rad_list[hex_point_index]);
+	this.rad = baseRad * ((Math.random() * 3 | 0) * 2 + 1 + hex_rad_list[hex_point_index]) + custom_rotation;
 	this.shaking = 0;
 
 	this.lightInputMultiplier = .01 + .02 * Math.random();
@@ -477,7 +535,7 @@ Line.prototype.beginPhase = function () {
 	var p = 1.0 * (p1 + 1) / (p1 + p2 + 2);
 	if (this.mode == "sporadic")
 		p = 1.0 * (p1 + 2.5) / (p1 + p2 + 5);
-	if (this.x == this.origin_x && this.y == this.origin_y)
+	if ((this.x == this.origin_x && this.y == this.origin_y) || this.cumulativeTime < 2.05*this.targetTime)
 		p = 0.5;
 	this.rad += baseRad * (Math.random() < p ? 1 : -1);
 	this.addedX = Math.cos(this.rad);

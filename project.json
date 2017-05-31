@@ -12,6 +12,33 @@
                 "order": 113,
                 "condition": "custom_use_background_image.value == true"
             },
+            "custom_displacement_x":
+            {
+                "text": "Displacement X %",
+                "type": "slider",
+                "max": 300,
+                "min": 0,
+                "value": 0,
+                "order": 115
+            },
+            "custom_displacement_y":
+            {
+                "text": "Displacement Y %",
+                "type": "slider",
+                "max": 173,
+                "min": 0,
+                "value": 0,
+                "order": 116
+            },
+            "custom_rotation":
+            {
+                "text": "Rotation Degrees<br/><small>Rotation applies before displacement.</small>",
+                "type": "slider",
+                "max": 120,
+                "min": 0,
+                "value": 0,
+                "order": 114
+            },
 			"custom_audio_pulse_inverse_color" : 
 			{
 				"order" : 201,
@@ -87,6 +114,13 @@
 			{
 				"order" : 302,
 				"text" : "Impose FPS limit",
+				"type" : "bool",
+				"value" : false
+			},
+			"custom_use_careful_calc" : 
+			{
+				"order" : 304,
+				"text" : "Use careful calculation",
 				"type" : "bool",
 				"value" : false
 			},
