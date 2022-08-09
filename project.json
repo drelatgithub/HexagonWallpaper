@@ -1,5 +1,5 @@
 {
-    "description": "Modified based upon 隆冬强's work:\nhttp://steamcommunity.com/sharedfiles/filedetails/?id=837894116\n\nI was really impressed by how simple HTML5 canvas could be used to create such beautiful visual effects by JS codings. I really loved it so I tried to use JS for the first time, and have made some modification to the original work and hope to make more modifications or to create my own works in the future.\n\n- You could make lights spawn near the cursor position.\n- Hexagon size would be bigger on large screens for better visual effect.\n- Hexagons are responsive to audio inputs.\n- You could adjust parameters to customize your own hexagons.\n\nIf you encounter problems updating this wallpaper, please try unsubscribing in the Wallpaper Engine, restarting the Wallpaper Engine and then re-subscribing it in the workshop.\n\nIf you encounter problems while using this wallpaper (too dark/bright, CPU intensive, etc), please leave a comment below. Thank you!",
+    "description": "Cool, interactive, audio-responsive hexagonal lights!\n\n- Lights optionally spawn near the cursor position.\n- Hexagons are responsive to audio inputs.\n- Highly configurable to your taste.\n\nIf you encounter problems updating this wallpaper, please try unsubscribing in the Wallpaper Engine, restarting the Wallpaper Engine and then re-subscribing it in the workshop.\n\nIf you encounter problems while using this wallpaper, please leave a comment below. Thank you!\n\nCredits:\n- This was originally modified based on 隆冬强's work: http://steamcommunity.com/sharedfiles/filedetails/?id=837894116\n- Shoutout to Dguto9 for solving dirty trail problem with background images!",
     "file": "index.html",
     "general": {
         "properties": {
@@ -311,7 +311,7 @@
     ],
     "title": "Hexagon New",
     "type": "web",
-    "version": "0.55",
+    "version": "0.56",
     "visibility": "public",
     "workshopid": 839120792
 }
