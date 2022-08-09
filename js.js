@@ -319,7 +319,7 @@ function loop() {
     if(custom_use_background_image){
         ctx.globalCompositeOperation = 'destination-out';
         ctx.shadowBlur = 0;
-        ctx.globalAlpha = global_fade_default * custom_fade_rate;
+        ctx.globalAlpha = global_fade_default * custom_fade_rate * (Math.random()*0.2);
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, w, h);
     }else{
