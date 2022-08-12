@@ -1,317 +1,413 @@
 {
-    "description": "Modified based upon 隆冬强's work:\nhttp://steamcommunity.com/sharedfiles/filedetails/?id=837894116\n\nI was really impressed by how simple HTML5 canvas could be used to create such beautiful visual effects by JS codings. I really loved it so I tried to use JS for the first time, and have made some modification to the original work and hope to make more modifications or to create my own works in the future.\n\n- You could make lights spawn near the cursor position.\n- Hexagon size would be bigger on large screens for better visual effect.\n- Hexagons are responsive to audio inputs.\n- You could adjust parameters to customize your own hexagons.\n\nIf you encounter problems updating this wallpaper, please try unsubscribing in the Wallpaper Engine, restarting the Wallpaper Engine and then re-subscribing it in the workshop.\n\nIf you encounter problems while using this wallpaper (too dark/bright, CPU intensive, etc), please leave a comment below. Thank you!",
-    "file": "index.html",
-    "general": {
-        "properties": {
-            "custom_background_image": {
-                "text": "ui_custom_background_image",
-                "type": "file",
-                "order": 113,
-                "condition": "custom_use_background_image.value == true"
-            },
-            "custom_displacement_x": {
-                "text": "ui_custom_displacement_x",
-                "type": "slider",
-                "max": 300,
-                "min": 0,
-                "value": 0,
-                "order": 115
-            },
-            "custom_displacement_y": {
-                "text": "ui_custom_displacement_y",
-                "type": "slider",
-                "max": 173,
-                "min": 0,
-                "value": 0,
-                "order": 116
-            },
-            "custom_rotation": {
-                "text": "ui_custom_rotation",
-                "type": "slider",
-                "max": 120,
-                "min": 0,
-                "value": 0,
-                "order": 114
-            },
-            "custom_audio_pulse_inverse_color": {
-                "order": 201,
-                "text": "ui_custom_audio_pulse_inverse_color",
-                "type": "bool",
-                "value": false
-            },
-            "custom_color_changing": {
-                "condition": "custom_color_mode.value == 1",
-                "max": 400,
-                "min": 20,
-                "order": 104,
-                "text": "ui_custom_color_changing",
-                "type": "slider",
-                "value": 100
-            },
-            "custom_color_fixed": {
-                "condition": "custom_color_mode.value == 2",
-                "order": 105,
-                "text": "ui_custom_color_fixed",
-                "type": "color",
-                "value": "0.3 0.3 1"
-            },
-            "custom_color_mode": {
-                "options": [
-                    {
-                        "label": "ui_custom_color_mode_circulating",
-                        "value": 1
-                    },
-                    {
-                        "label": "ui_custom_color_mode_fixed",
-                        "value": 2
-                    }
-                ],
-                "order": 103,
-                "text": "ui_custom_color_mode",
-                "type": "combo",
-                "value": 1
-            },
-            "custom_decay_factor": {
-                "max": 200,
-                "min": 50,
-                "order": 108,
-                "text": "ui_custom_decay_factor",
-                "type": "slider",
-                "value": 100
-            },
-            "custom_fade_rate": {
-                "max": 200,
-                "min": 60,
-                "order": 107,
-                "text": "ui_custom_fade_rate",
-                "type": "slider",
-                "value": 100
-            },
-            "custom_fps_limit": {
-                "condition": "custom_fps_limit_on.value == true",
-                "max": 60,
-                "min": 12,
-                "order": 303,
-                "text": "ui_custom_fps_limit",
-                "type": "slider",
-                "value": 20
-            },
-            "custom_fps_limit_on": {
-                "order": 302,
-                "text": "ui_custom_fps_limit_on",
-                "type": "bool",
-                "value": false
-            },
-            "custom_use_careful_calc": {
-                "order": 304,
-                "text": "ui_custom_use_careful_calc",
-                "type": "bool",
-                "value": false
-            },
-            "custom_glowing_factor": {
-                "max": 500,
-                "min": 50,
-                "order": 106,
-                "text": "ui_custom_glowing_factor",
-                "type": "slider",
-                "value": 100
-            },
-            "custom_max_lines": {
-                "max": 800,
-                "min": 200,
-                "order": 301,
-                "text": "ui_custom_max_lines",
-                "type": "slider",
-                "value": 300
-            },
-            "custom_pattern_size": {
-                "max": 150,
-                "min": 50,
-                "order": 102,
-                "text": "ui_custom_pattern_size",
-                "type": "slider",
-                "value": 100
-            },
-            "custom_scale_factor": {
-                "max": 140,
-                "min": 60,
-                "order": 101,
-                "text": "ui_custom_scale_factor",
-                "type": "slider",
-                "value": 100
-            },
-            "custom_spawn_origin": {
-                "options": [
-                    {
-                        "label": "ui_custom_spawn_origin_cursor",
-                        "value": 1
-                    },
-                    {
-                        "label": "ui_custom_spawn_origin_middle",
-                        "value": 2
-                    },
-                    {
-                        "label": "ui_custom_spawn_origin_random",
-                        "value": 3
-                    }
-                ],
-                "order": 1,
-                "text": "ui_custom_spawn_origin",
-                "type": "combo",
-                "value": 1
-            },
-            "custom_speed_factor": {
-                "max": 150,
-                "min": 60,
-                "order": 109,
-                "text": "ui_custom_speed_factor",
-                "type": "slider",
-                "value": 100
-            },
-            "custom_use_background_image": {
-                "order": 111,
-                "text": "ui_custom_use_background_image",
-                "type": "bool",
-                "value": false
-            },
-            "custom_use_greyish_bg": {
-                "order": 112,
-                "text": "ui_custom_use_greyish_bg",
-                "type": "bool",
-                "condition": "custom_use_background_image.value == false",
-                "value": true
-            },
-            "custom_use_lines": {
-                "order": 2,
-                "text": "ui_custom_use_lines",
-                "type": "bool",
-                "value": true
-            },
-            "custom_use_sparkles": {
-                "order": 110,
-                "text": "ui_custom_use_sparkles",
-                "type": "bool",
-                "value": true
-            },
-            "header_audio_response": {
-                "order": 200,
-                "text": "ui_header_audio_response",
-                "type": "bool",
-                "value": false
-            },
-            "header_miscellaneous": {
-                "order": 0,
-                "text": "ui_header_miscellaneous",
-                "type": "bool",
-                "value": false
-            },
-            "header_others": {
-                "order": 1000,
-                "text": "ui_header_others",
-                "type": "bool",
-                "value": false
-            },
-            "header_performance": {
-                "order": 300,
-                "text": "ui_header_performance",
-                "type": "bool",
-                "value": false
-            },
-            "header_visual": {
-                "order": 100,
-                "text": "ui_header_visual",
-                "type": "bool",
-                "value": false
-            },
-            "schemecolor": {
-                "order": 1001,
-                "text": "ui_browse_properties_scheme_color",
-                "type": "color",
-                "value": "0 0 0"
-            }
-        },
-        "localization": {
-            "en-us": {
-                "ui_custom_audio_pulse_inverse_color": "Inverse color on pulse",
-                "ui_custom_background_image": "Background Image",
-                "ui_custom_color_changing": "Color changing speed %<br/>",
-                "ui_custom_color_fixed": "Hexagon color<br/>",
-                "ui_custom_color_mode": "Color mode",
-                "ui_custom_color_mode_circulating": "Circulating",
-                "ui_custom_color_mode_fixed": "Fixed",
-                "ui_custom_decay_factor": "Light decay speed %<br/><small>Smaller decay speed means light could last longer.</small>",
-                "ui_custom_displacement_x": "Displacement X %",
-                "ui_custom_displacement_y": "Displacement Y %",
-                "ui_custom_fade_rate": "Fading rate %<br/><small>Lower fading rate means light leaves longer tails.</small>",
-                "ui_custom_fps_limit": "FPS limit",
-                "ui_custom_fps_limit_on": "Impose FPS limit",
-                "ui_custom_glowing_factor": "Blurring %",
-                "ui_custom_max_lines": "Maximum lights<br/><small>Too many lights on stage may affect performance.</small>",
-                "ui_custom_pattern_size": "Line or point size %",
-                "ui_custom_rotation": "Rotation Degrees<br/><small>Rotation applies before displacement.</small>",
-                "ui_custom_scale_factor": "Hexagon size %",
-                "ui_custom_spawn_origin": "Lights spawn position",
-                "ui_custom_spawn_origin_cursor": "Cursor",
-                "ui_custom_spawn_origin_middle": "Middle",
-                "ui_custom_spawn_origin_random": "Random",
-                "ui_custom_speed_factor": "Light propagating speed %",
-                "ui_custom_use_background_image": "Use custom background image",
-                "ui_custom_use_careful_calc": "Use careful calculation",
-                "ui_custom_use_greyish_bg": "Greyish background<br/><small>To ease the trailing effect</small>",
-                "ui_custom_use_lines": "Use lines instead of dots<br/><small>Would look much better on HD screens.</small>",
-                "ui_custom_use_sparkles": "Sparkles beside lines",
-                "ui_header_audio_response": "<h3>Audio&nbsp;Response&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>",
-                "ui_header_miscellaneous": "<h3>Miscellaneous&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>",
-                "ui_header_others": "<h3>Others&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>",
-                "ui_header_performance": "<h3>Performance&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>",
-                "ui_header_visual": "<h3>Visual&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>"
-            },
-            "zh-chs": {
-                "ui_custom_audio_pulse_inverse_color": "发生脉冲时使用反色调",
-                "ui_custom_background_image": "背景图片",
-                "ui_custom_color_changing": "颜色变化率%<br/>",
-                "ui_custom_color_fixed": "六边形颜色<br/>",
-                "ui_custom_color_mode": "颜色模式",
-                "ui_custom_color_mode_circulating": "循环",
-                "ui_custom_color_mode_fixed": "固定",
-                "ui_custom_decay_factor": "光线衰减速率%<br/><small>数值小意味着光线可以行进更长距离。</small>",
-                "ui_custom_displacement_x": "水平位移%",
-                "ui_custom_displacement_y": "竖直位移%",
-                "ui_custom_fade_rate": "褪色速率%<br/><small>数值小意味着光线会有更长的尾迹。</small>",
-                "ui_custom_fps_limit": "帧率限制",
-                "ui_custom_fps_limit_on": "限制帧率",
-                "ui_custom_glowing_factor": "模糊率%",
-                "ui_custom_max_lines": "最大光线数目<br/><small>同时存在太多光线会影响性能。</small>",
-                "ui_custom_pattern_size": "点线的粗细%",
-                "ui_custom_rotation": "旋转角度<br/><small>旋转在位移之前</small>",
-                "ui_custom_scale_factor": "六边形大小%",
-                "ui_custom_spawn_origin": "光线产生位置",
-                "ui_custom_spawn_origin_cursor": "光标",
-                "ui_custom_spawn_origin_middle": "正中",
-                "ui_custom_spawn_origin_random": "随机",
-                "ui_custom_speed_factor": "光线传播速度%",
-                "ui_custom_use_background_image": "自定义背景",
-                "ui_custom_use_careful_calc": "使用更细致的计算",
-                "ui_custom_use_greyish_bg": "灰色背景<br/><small>减少光线尾迹</small>",
-                "ui_custom_use_lines": "使用线型染色<br/><small>在高清显示屏上效果更好。</small>",
-                "ui_custom_use_sparkles": "光线旁随机产生亮点",
-                "ui_header_audio_response": "<h3><br/>音频响应 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>",
-                "ui_header_miscellaneous": "<h3><br/>首选项 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>",
-                "ui_header_others": "<h3><br/>其他 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>",
-                "ui_header_performance": "<h3><br/>性能 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>",
-                "ui_header_visual": "<h3><br/>视觉效果 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>"
-            }
-        },
-        "supportsaudioprocessing": true
-    },
-    "monetization": false,
-    "preview": "preview.jpg",
-    "tags": [
-        "Music"
-    ],
-    "title": "Hexagon New",
-    "type": "web",
-    "version": "0.55",
-    "visibility": "public",
-    "workshopid": 839120792
+	"contentrating" : "Everyone",
+	"description" : "Cool, interactive, audio-responsive hexagonal lights!\n\n- Lights optionally spawn near the cursor position.\n- Hexagons are responsive to audio inputs.\n- Highly configurable to your taste.\n\nIf you encounter problems updating this wallpaper, please try unsubscribing in the Wallpaper Engine, restarting the Wallpaper Engine and then re-subscribing it in the workshop.\n\nIf you encounter problems while using this wallpaper, please leave a comment below. Thank you!\n\nCredits:\n- This was originally modified based on 隆冬强's work: http://steamcommunity.com/sharedfiles/filedetails/?id=837894116\n- Shoutout to Dguto9 for solving dirty trail problem with background images!",
+	"file" : "index.html",
+	"general" : 
+	{
+		"localization" : 
+		{
+			"en-us" : 
+			{
+				"ui_custom_audio_pulse_inverse_color" : "Inverse color on pulse",
+				"ui_custom_background_image" : "Background Image",
+				"ui_custom_color_changing" : "Color changing speed %<br/>",
+				"ui_custom_color_fixed" : "Hexagon color<br/>",
+				"ui_custom_color_rainbow_scale" : "Rainbow scale",
+				"ui_custom_color_rainbow_offset_speed" : "Rainbow Movement Speed",
+				"ui_custom_color_mode" : "Color mode",
+				"ui_custom_color_mode_circulating" : "Circulating",
+				"ui_custom_color_mode_fixed" : "Fixed",
+				"ui_custom_color_mode_rainbow" : "Rainbow",
+				"ui_custom_decay_factor" : "Light decay speed %<br/><small>Smaller decay speed means light could last longer.</small>",
+				"ui_custom_displacement_x" : "Displacement X %",
+				"ui_custom_displacement_y" : "Displacement Y %",
+				"ui_custom_fade_rate" : "Fading rate %<br/><small>Lower fading rate means light leaves longer tails.</small>",
+				"ui_custom_fps_limit" : "FPS limit",
+				"ui_custom_fps_limit_on" : "Impose FPS limit",
+				"ui_custom_glowing_factor" : "Blurring %",
+				"ui_custom_max_lines" : "Maximum lights<br/><small>Too many lights on stage may affect performance.</small>",
+				"ui_custom_pattern_size" : "Line or point size %",
+				"ui_custom_rotation" : "Rotation Degrees<br/><small>Rotation applies before displacement.</small>",
+				"ui_custom_scale_factor" : "Hexagon size %",
+				"ui_custom_spawn_origin" : "Lights spawn position",
+				"ui_custom_spawn_origin_cursor" : "Cursor",
+				"ui_custom_spawn_origin_middle" : "Middle",
+				"ui_custom_spawn_origin_random" : "Random",
+				"ui_custom_speed_factor" : "Light propagating speed %",
+				"ui_custom_use_background_image" : "Use custom background image",
+				"ui_custom_use_careful_calc" : "Use careful calculation",
+				"ui_custom_use_greyish_bg" : "Greyish background<br/><small>To ease the trailing effect</small>",
+				"ui_custom_use_lines" : "Use lines instead of dots<br/><small>Would look much better on HD screens.</small>",
+				"ui_custom_use_sparkles" : "Sparkles beside lines",
+				"ui_header_audio_response" : "<h3>Audio&nbsp;Response&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>",
+				"ui_header_miscellaneous" : "<h3>Miscellaneous&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>",
+				"ui_header_others" : "<h3>Others&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>",
+				"ui_header_performance" : "<h3>Performance&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>",
+				"ui_header_visual" : "<h3>Visual&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>"
+			},
+			"zh-chs" : 
+			{
+				"ui_custom_audio_pulse_inverse_color" : "发生脉冲时使用反色调",
+				"ui_custom_background_image" : "背景图片",
+				"ui_custom_color_changing" : "颜色变化率%<br/>",
+				"ui_custom_color_fixed" : "六边形颜色<br/>",
+				"ui_custom_color_mode" : "颜色模式",
+				"ui_custom_color_mode_circulating" : "循环",
+				"ui_custom_color_mode_fixed" : "固定",
+				"ui_custom_decay_factor" : "光线衰减速率%<br/><small>数值小意味着光线可以行进更长距离。</small>",
+				"ui_custom_displacement_x" : "水平位移%",
+				"ui_custom_displacement_y" : "竖直位移%",
+				"ui_custom_fade_rate" : "褪色速率%<br/><small>数值小意味着光线会有更长的尾迹。</small>",
+				"ui_custom_fps_limit" : "帧率限制",
+				"ui_custom_fps_limit_on" : "限制帧率",
+				"ui_custom_glowing_factor" : "模糊率%",
+				"ui_custom_max_lines" : "最大光线数目<br/><small>同时存在太多光线会影响性能。</small>",
+				"ui_custom_pattern_size" : "点线的粗细%",
+				"ui_custom_rotation" : "旋转角度<br/><small>旋转在位移之前</small>",
+				"ui_custom_scale_factor" : "六边形大小%",
+				"ui_custom_spawn_origin" : "光线产生位置",
+				"ui_custom_spawn_origin_cursor" : "光标",
+				"ui_custom_spawn_origin_middle" : "正中",
+				"ui_custom_spawn_origin_random" : "随机",
+				"ui_custom_speed_factor" : "光线传播速度%",
+				"ui_custom_use_background_image" : "自定义背景",
+				"ui_custom_use_careful_calc" : "使用更细致的计算",
+				"ui_custom_use_greyish_bg" : "灰色背景<br/><small>减少光线尾迹</small>",
+				"ui_custom_use_lines" : "使用线型染色<br/><small>在高清显示屏上效果更好。</small>",
+				"ui_custom_use_sparkles" : "光线旁随机产生亮点",
+				"ui_header_audio_response" : "<h3><br/>音频响应 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>",
+				"ui_header_miscellaneous" : "<h3><br/>首选项 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>",
+				"ui_header_others" : "<h3><br/>其他 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>",
+				"ui_header_performance" : "<h3><br/>性能 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>",
+				"ui_header_visual" : "<h3><br/>视觉效果 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>"
+			}
+		},
+		"properties" : 
+		{
+			"custom_audio_pulse_inverse_color" : 
+			{
+				"index" : 23,
+				"order" : 123,
+				"text" : "ui_custom_audio_pulse_inverse_color",
+				"type" : "bool",
+				"value" : false
+			},
+			"custom_background_image" : 
+			{
+				"condition" : "custom_use_background_image.value == true",
+				"index" : 18,
+				"order" : 118,
+				"text" : "ui_custom_background_image",
+				"type" : "file"
+			},
+			"custom_color_changing" : 
+			{
+				"condition" : "custom_color_mode.value == 1",
+				"index" : 7,
+				"max" : 400,
+				"min" : 20,
+				"order" : 107,
+				"text" : "ui_custom_color_changing",
+				"type" : "slider",
+				"value" : 100
+			},
+			"custom_color_fixed" : 
+			{
+				"condition" : "custom_color_mode.value == 2",
+				"index" : 8,
+				"order" : 108,
+				"text" : "ui_custom_color_fixed",
+				"type" : "color",
+				"value" : "0.3 0.3 1"
+			},
+			"custom_color_mode" : 
+			{
+				"index" : 6,
+				"options" : 
+				[
+					{
+						"label" : "ui_custom_color_mode_circulating",
+						"value" : 1
+					},
+					{
+						"label" : "ui_custom_color_mode_fixed",
+						"value" : 2
+					},
+					{
+						"label" : "ui_custom_color_mode_rainbow",
+						"value" : 3
+					}
+				],
+				"order" : 106,
+				"text" : "ui_custom_color_mode",
+				"type" : "combo",
+				"value" : 1
+			},
+			"custom_color_rainbow_offset_speed" : 
+			{
+				"condition" : "custom_color_mode.value == 3",
+				"fraction" : false,
+				"index" : 10,
+				"max" : 100,
+				"min" : 0,
+				"order" : 110,
+				"text" : "ui_custom_color_rainbow_offset_speed",
+				"type" : "slider",
+				"value" : 1
+			},
+			"custom_color_rainbow_scale" : 
+			{
+				"condition" : "custom_color_mode.value == 3",
+				"fraction" : true,
+				"index" : 9,
+				"max" : 10,
+				"min" : 0.1,
+				"order" : 109,
+				"precision" : 2,
+				"step" : 0.1,
+				"text" : "ui_custom_color_rainbow_scale",
+				"type" : "slider",
+				"value" : 3
+			},
+			"custom_decay_factor" : 
+			{
+				"index" : 13,
+				"max" : 200,
+				"min" : 50,
+				"order" : 113,
+				"text" : "ui_custom_decay_factor",
+				"type" : "slider",
+				"value" : 100
+			},
+			"custom_displacement_x" : 
+			{
+				"index" : 20,
+				"max" : 300,
+				"min" : 0,
+				"order" : 120,
+				"text" : "ui_custom_displacement_x",
+				"type" : "slider",
+				"value" : 0
+			},
+			"custom_displacement_y" : 
+			{
+				"index" : 21,
+				"max" : 173,
+				"min" : 0,
+				"order" : 121,
+				"text" : "ui_custom_displacement_y",
+				"type" : "slider",
+				"value" : 0
+			},
+			"custom_fade_rate" : 
+			{
+				"index" : 12,
+				"max" : 200,
+				"min" : 60,
+				"order" : 112,
+				"text" : "ui_custom_fade_rate",
+				"type" : "slider",
+				"value" : 100
+			},
+			"custom_fps_limit" : 
+			{
+				"condition" : "custom_fps_limit_on.value == true",
+				"index" : 27,
+				"max" : 60,
+				"min" : 12,
+				"order" : 127,
+				"text" : "ui_custom_fps_limit",
+				"type" : "slider",
+				"value" : 20
+			},
+			"custom_fps_limit_on" : 
+			{
+				"index" : 26,
+				"order" : 126,
+				"text" : "ui_custom_fps_limit_on",
+				"type" : "bool",
+				"value" : false
+			},
+			"custom_glowing_factor" : 
+			{
+				"index" : 11,
+				"max" : 500,
+				"min" : 50,
+				"order" : 111,
+				"text" : "ui_custom_glowing_factor",
+				"type" : "slider",
+				"value" : 100
+			},
+			"custom_max_lines" : 
+			{
+				"index" : 25,
+				"max" : 800,
+				"min" : 200,
+				"order" : 125,
+				"text" : "ui_custom_max_lines",
+				"type" : "slider",
+				"value" : 300
+			},
+			"custom_pattern_size" : 
+			{
+				"index" : 5,
+				"max" : 150,
+				"min" : 50,
+				"order" : 105,
+				"text" : "ui_custom_pattern_size",
+				"type" : "slider",
+				"value" : 100
+			},
+			"custom_rotation" : 
+			{
+				"index" : 19,
+				"max" : 120,
+				"min" : 0,
+				"order" : 119,
+				"text" : "ui_custom_rotation",
+				"type" : "slider",
+				"value" : 0
+			},
+			"custom_scale_factor" : 
+			{
+				"index" : 4,
+				"max" : 140,
+				"min" : 60,
+				"order" : 104,
+				"text" : "ui_custom_scale_factor",
+				"type" : "slider",
+				"value" : 100
+			},
+			"custom_spawn_origin" : 
+			{
+				"index" : 1,
+				"options" : 
+				[
+					{
+						"label" : "ui_custom_spawn_origin_cursor",
+						"value" : 1
+					},
+					{
+						"label" : "ui_custom_spawn_origin_middle",
+						"value" : 2
+					},
+					{
+						"label" : "ui_custom_spawn_origin_random",
+						"value" : 3
+					}
+				],
+				"order" : 101,
+				"text" : "ui_custom_spawn_origin",
+				"type" : "combo",
+				"value" : 1
+			},
+			"custom_speed_factor" : 
+			{
+				"index" : 14,
+				"max" : 150,
+				"min" : 60,
+				"order" : 114,
+				"text" : "ui_custom_speed_factor",
+				"type" : "slider",
+				"value" : 100
+			},
+			"custom_use_background_image" : 
+			{
+				"index" : 16,
+				"order" : 116,
+				"text" : "ui_custom_use_background_image",
+				"type" : "bool",
+				"value" : false
+			},
+			"custom_use_careful_calc" : 
+			{
+				"index" : 28,
+				"order" : 128,
+				"text" : "ui_custom_use_careful_calc",
+				"type" : "bool",
+				"value" : false
+			},
+			"custom_use_greyish_bg" : 
+			{
+				"condition" : "custom_use_background_image.value == false",
+				"index" : 17,
+				"order" : 117,
+				"text" : "ui_custom_use_greyish_bg",
+				"type" : "bool",
+				"value" : true
+			},
+			"custom_use_lines" : 
+			{
+				"index" : 2,
+				"order" : 102,
+				"text" : "ui_custom_use_lines",
+				"type" : "bool",
+				"value" : true
+			},
+			"custom_use_sparkles" : 
+			{
+				"index" : 15,
+				"order" : 115,
+				"text" : "ui_custom_use_sparkles",
+				"type" : "bool",
+				"value" : true
+			},
+			"header_audio_response" : 
+			{
+				"index" : 22,
+				"order" : 122,
+				"text" : "ui_header_audio_response",
+				"type" : "bool",
+				"value" : false
+			},
+			"header_miscellaneous" : 
+			{
+				"index" : 0,
+				"order" : 100,
+				"text" : "ui_header_miscellaneous",
+				"type" : "bool",
+				"value" : false
+			},
+			"header_others" : 
+			{
+				"index" : 29,
+				"order" : 129,
+				"text" : "ui_header_others",
+				"type" : "bool",
+				"value" : false
+			},
+			"header_performance" : 
+			{
+				"index" : 24,
+				"order" : 124,
+				"text" : "ui_header_performance",
+				"type" : "bool",
+				"value" : false
+			},
+			"header_visual" : 
+			{
+				"index" : 3,
+				"order" : 103,
+				"text" : "ui_header_visual",
+				"type" : "bool",
+				"value" : false
+			},
+			"schemecolor" : 
+			{
+				"order" : 1001,
+				"text" : "ui_browse_properties_scheme_color",
+				"type" : "color",
+				"value" : "0 0 0"
+			}
+		},
+		"supportsaudioprocessing" : true
+	},
+	"monetization" : false,
+	"tags" : [ "Abstract" ],
+	"title" : "Hexagon New",
+	"type" : "web",
+	"version" : 0,
+	"visibility" : "public",
+	"workshopid" : 839120792,
+	"workshopurl" : "steam://url/CommunityFilePage/839120792"
 }
