@@ -118,19 +118,12 @@
                 "value": 100
             },
             "custom_fps_limit": {
-                "condition": "custom_fps_limit_on.value == true",
-                "max": 60,
+                "max": 144,
                 "min": 12,
                 "order": 303,
                 "text": "ui_custom_fps_limit",
                 "type": "slider",
-                "value": 20
-            },
-            "custom_fps_limit_on": {
-                "order": 302,
-                "text": "ui_custom_fps_limit_on",
-                "type": "bool",
-                "value": false
+                "value": 60
             },
             "custom_use_careful_calc": {
                 "order": 304,
@@ -277,7 +270,6 @@
                 "ui_custom_displacement_y": "Displacement Y %",
                 "ui_custom_fade_rate": "Fading rate %<br/><small>Higher fading rate means light trails persist for a shorter time.</small>",
                 "ui_custom_fps_limit": "FPS limit",
-                "ui_custom_fps_limit_on": "Impose FPS limit",
                 "ui_custom_glowing_factor": "Blurring %",
                 "ui_custom_max_lines": "Maximum lights<br/><small>Too many lights on stage may affect performance.</small>",
                 "ui_custom_pattern_size": "Line or point size %",
@@ -315,7 +307,6 @@
                 "ui_custom_displacement_y": "竖直位移%",
                 "ui_custom_fade_rate": "褪色速率%<br/><small>数值越大，光线残留时间越短。</small>",
                 "ui_custom_fps_limit": "帧率限制",
-                "ui_custom_fps_limit_on": "限制帧率",
                 "ui_custom_glowing_factor": "模糊率%",
                 "ui_custom_max_lines": "最大光线数目<br/><small>同时存在太多光线会影响性能。</small>",
                 "ui_custom_pattern_size": "点线的粗细%",

@@ -57,11 +57,10 @@ var custom_use_lines = false;
 var custom_use_sparkles = false;
 var custom_use_greyish_bg = true;
 var custom_audio_pulse_inverse_color = false;
-var custom_fps_limit_on = false;
-var custom_fps_limit = 20;
+var custom_fps_limit = 60;
 var custom_use_background_image = false;
 // Derived custom settings
-var custom_mspf_limit = 50;
+var custom_mspf_limit = 1000 / custom_fps_limit;
 var custom_rotation_cos = 1.0;
 var custom_rotation_sin = 0.0;
 
@@ -70,8 +69,8 @@ const linemode_normal = 0;
 const linemode_sporadic = 1;
 const linemode_explosion = 2;
 
-// Animation timers
-var now, then, elapsed;
+// Animation timers, in ms.
+var then; // last aligned frame time point, in ms.
 
 // Position, size and color
 var global_fade_default = 0.04;
@@ -266,9 +265,6 @@ window.wallpaperPropertyListener = {
         if (properties.custom_max_lines) {
             custom_max_lines = properties.custom_max_lines.value;
         }
-        if (properties.custom_fps_limit_on) {
-            custom_fps_limit_on = properties.custom_fps_limit_on.value;
-        }
         if (properties.custom_fps_limit) {
             custom_fps_limit = properties.custom_fps_limit.value;
             custom_mspf_limit = 1000.0 / custom_fps_limit;
@@ -319,9 +315,9 @@ function loop() {
     }
     
     // FPS limit
-    now = performance.now();
-    elapsed = now - then;
-    if(custom_fps_limit_on && elapsed <= custom_mspf_limit){
+    var now = performance.now();
+    var elapsed = now - then;
+    if(elapsed <= custom_mspf_limit){
         return;
     }
     then = now - (elapsed % custom_mspf_limit);
@@ -395,10 +391,10 @@ function loop() {
         }
     }
 
-    // Remove all finished lines.
+    // Advance all lines, and remove finished ones.
     index = 0;
     while (index < lines.length) {
-        lines[index].step();
+        lines[index].step(elapsed);
         if (lines[index].finished) {
             lines.splice(index, 1);
         } else
@@ -406,7 +402,7 @@ function loop() {
     }
     index = 0;
     while (index < special_lines.length) {
-        special_lines[index].step();
+        special_lines[index].step(elapsed);
         if (special_lines[index].finished) {
             special_lines.splice(index, 1);
         } else
@@ -566,7 +562,7 @@ Line.prototype.beginPhase = function () {
         this.finished = true;
 }
 
-Line.prototype.step = function () {
+Line.prototype.step = function (elapsed) {
 
     ++this.time;
     ++this.cumulativeTime;
