@@ -62,7 +62,7 @@
 				"index": 10,
 				"max": 100,
 				"min": 0,
-				"order": 110,
+				"order": 105,
 				"text": "ui_custom_color_rainbow_offset_speed",
 				"type": "slider",
 				"value": 1
@@ -74,7 +74,7 @@
 				"index": 9,
 				"max": 10,
 				"min": 0.1,
-				"order": 109,
+				"order": 104,
 				"precision": 2,
 				"step": 0.1,
 				"text": "ui_custom_color_rainbow_scale",
