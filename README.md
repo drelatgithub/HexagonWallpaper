@@ -15,4 +15,4 @@ Features:
 
 ## Credits
 - This was originally modified based on 隆冬强's work: http://steamcommunity.com/sharedfiles/filedetails/?id=837894116
-- Shoutout to Dguto9 for solving dirty trail problem with background images!
+- Shoutout to Dguto9 for solving dirty trail problem with background images, as well as adding rainbow effects!!

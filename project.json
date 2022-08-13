@@ -1,5 +1,5 @@
 {
-    "description": "Cool, interactive, audio-responsive hexagonal lights!\n\n- Lights optionally spawn near the cursor position.\n- Hexagons are responsive to audio inputs.\n- Highly configurable to your taste.\n\nIf you encounter problems updating this wallpaper, please try unsubscribing in the Wallpaper Engine, restarting the Wallpaper Engine and then re-subscribing it in the workshop.\n\nIf you encounter problems while using this wallpaper, please leave a comment below. Thank you!\n\nCredits:\n- This was originally modified based on 隆冬强's work: http://steamcommunity.com/sharedfiles/filedetails/?id=837894116\n- Shoutout to Dguto9 for solving dirty trail problem with background images!",
+    "description": "Cool, interactive, audio-responsive hexagonal lights!\n\n- Lights optionally spawn near the cursor position.\n- Hexagons are responsive to audio inputs.\n- Highly configurable to your taste.\n\nIf you encounter problems updating this wallpaper, please try unsubscribing in the Wallpaper Engine, restarting the Wallpaper Engine and then re-subscribing it in the workshop.\n\nIf you encounter problems while using this wallpaper, please leave a comment below. Thank you!\n\nCredits:\n- This was originally modified based on 隆冬强's work: http://steamcommunity.com/sharedfiles/filedetails/?id=837894116\n- Shoutout to Dguto9 for solving dirty trail problem with background images, as well as adding rainbow effects!",
     "file": "index.html",
     "general": {
         "properties": {
@@ -304,7 +304,7 @@
                 "ui_custom_background_image": "背景图片",
                 "ui_custom_color_changing": "颜色变化率%<br/>",
                 "ui_custom_color_fixed": "六边形颜色<br/>",
-                "ui_custom_color_rainbow_scale" : "彩虹秤",
+                "ui_custom_color_rainbow_scale" : "彩虹大小",
 				"ui_custom_color_rainbow_offset_speed" : "彩虹移动速度",
                 "ui_custom_color_mode": "颜色模式",
                 "ui_custom_color_mode_circulating": "循环",
@@ -347,7 +347,7 @@
     ],
     "title": "Hexagon New",
     "type": "web",
-    "version": "0.56",
+    "version": "0.57",
     "visibility": "public",
     "workshopid": 839120792
 }
