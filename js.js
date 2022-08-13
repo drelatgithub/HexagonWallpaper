@@ -49,6 +49,8 @@ var custom_color_changing = 1.0;
 var custom_color_changing_old = 1.0;
 var custom_color_fixed_hue;
 var custom_color_fixed_sat;
+var custom_color_rainbow_scale = 3;
+var custom_color_rainbow_offset_speed = 1;
 var custom_spawn_origin = 1;
 var custom_use_careful_calc = false;
 var custom_use_lines = false;
@@ -246,6 +248,12 @@ window.wallpaperPropertyListener = {
             }else{
                 custom_color_fixed_sat = (maxVal - minVal) / (2 - 2*l);
             }
+		}
+		if (properties.custom_color_rainbow_scale) {
+			custom_color_rainbow_scale = properties.custom_color_rainbow_scale.value;
+		}
+		if (properties.custom_color_rainbow_offset_speed) {
+			custom_color_rainbow_offset_speed = properties.custom_color_rainbow_offset_speed.value;
 		}
 		if (properties.custom_audio_pulse_inverse_color) {
 			custom_audio_pulse_inverse_color = properties.custom_audio_pulse_inverse_color.value;
@@ -505,11 +513,17 @@ Line.prototype.reset = function (mode) {
 	if (this.mode == "sporadic")
 		this.lightInputMultiplier = .03 + .03 * Math.random();
 
-    if(custom_color_mode==1){
-        this.color = opts.color.replace('hue', tick * .10 * custom_color_changing + color0 + ((custom_audio_pulse_inverse_color && this.mode == "explosion") ? 180 : 0)).replace('sat', '100%');
-    }else{
-        this.color = opts.color.replace('hue', custom_color_fixed_hue + ((custom_audio_pulse_inverse_color && this.mode == "explosion") ? 180 : 0)).replace('sat', custom_color_fixed_sat * 100 + '%');
-    }
+    switch (custom_color_mode){
+		case 1:
+			this.color = opts.color.replace('hue', tick * .10 * custom_color_changing + color0 + ((custom_audio_pulse_inverse_color && this.mode == "explosion") ? 180 : 0)).replace('sat', '100%');
+			break;
+    	case 2:
+        	this.color = opts.color.replace('hue', custom_color_fixed_hue + ((custom_audio_pulse_inverse_color && this.mode == "explosion") ? 180 : 0)).replace('sat', custom_color_fixed_sat * 100 + '%');
+			break;
+		case 3:
+			this.color = opts.color.replace('hue', 0).replace('sat', '100%');
+			break;
+	}
 	
 	this.cumulativeTime = 0;
 
@@ -607,6 +621,12 @@ Line.prototype.step = function () {
     // Set final drawing position and draw
 	var this_loc_x = actual_pos_x + Math.sin(this.rad) * this.shaking;
 	var this_loc_y = actual_pos_y + Math.cos(this.rad) * this.shaking;
+
+	if (custom_color_mode == 3) {
+		this.color = opts.color.replace('hue', ((((this_loc_x+this_loc_y-0)/(h+w-0))*(360-0)+0)*custom_color_rainbow_scale + custom_color_rainbow_offset_speed * tick) + ((custom_audio_pulse_inverse_color && this.mode == "explosion") ? 180 : 0)).replace('sat', '100%');
+	}
+	ctx.fillStyle = ctx.shadowColor = this.color.replace('light', brightness);
+
 	if (custom_use_lines) {
 		ctx.beginPath();
 		ctx.strokeStyle = ctx.fillStyle;
