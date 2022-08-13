@@ -65,6 +65,11 @@ var custom_mspf_limit = 50;
 var custom_rotation_cos = 1.0;
 var custom_rotation_sin = 0.0;
 
+// Constant settings.
+const linemode_normal = 0;
+const linemode_sporadic = 1;
+const linemode_explosion = 2;
+
 // Animation timers
 var now, then, elapsed;
 
@@ -341,12 +346,12 @@ function loop() {
     ctx.globalCompositeOperation = 'lighter';
 
     if (lines.length < custom_max_lines && Math.random() < 1) {
-        lines.push(new Line("normal"));
+        lines.push(new Line(linemode_normal));
     }
     if (!explosion_lock && audio_lf + audio_hf > 29 && audio_lf + audio_hf > (audioSample_lf + audioSample_hf) * 1.5 && tick - last_time_explosion > 20) {
         // Explosion
         for (var i = 0; i < 100; i++)
-            special_lines.push(new Line("explosion"));
+            special_lines.push(new Line(linemode_explosion));
         last_time_explosion = tick;
         explosion_lock = true;
     }
@@ -380,7 +385,7 @@ function loop() {
 
         }
         if (sporadic_spawning) {
-            special_lines.push(new Line("sporadic"));
+            special_lines.push(new Line(linemode_sporadic));
             if (tick - last_time_sporadic > sporadic_duration) {
                 sporadic_spawning = false;
                 sporadic_interval = (Math.random() * 260 + 100) | 0;
@@ -390,6 +395,7 @@ function loop() {
         }
     }
 
+    // Remove all finished lines.
     index = 0;
     while (index < lines.length) {
         lines[index].step();
@@ -417,7 +423,7 @@ Line.prototype.reset = function (mode) {
 
     this.mode = mode;
     this.lifespan = (300.0 / custom_decay_factor) | 0;
-    if (this.mode == "sporadic")
+    if (this.mode == linemode_sporadic)
         this.lifespan = (600.0 / custom_decay_factor) | 0;
 
     this.finished = false;
@@ -446,7 +452,7 @@ Line.prototype.reset = function (mode) {
 
     this.origin_x = rel_x;
     this.origin_y = rel_y;
-    if (this.mode == "sporadic") {
+    if (this.mode == linemode_sporadic) {
         rel_x = (sporadic_spawn_x - opts.cx) / hex_side_length;
         rel_y = (sporadic_spawn_y - opts.cy) / hex_side_length;
     }
@@ -511,15 +517,15 @@ Line.prototype.reset = function (mode) {
     this.shaking = 0;
 
     this.lightInputMultiplier = .01 + .02 * Math.random();
-    if (this.mode == "sporadic")
+    if (this.mode == linemode_sporadic)
         this.lightInputMultiplier = .03 + .03 * Math.random();
 
     switch (custom_color_mode){
         case 1:
-            this.color = opts.color.replace('hue', tick * .10 * custom_color_changing + color0 + ((custom_audio_pulse_inverse_color && this.mode == "explosion") ? 180 : 0)).replace('sat', '100%');
+            this.color = opts.color.replace('hue', tick * .10 * custom_color_changing + color0 + ((custom_audio_pulse_inverse_color && this.mode == linemode_explosion) ? 180 : 0)).replace('sat', '100%');
             break;
         case 2:
-            this.color = opts.color.replace('hue', custom_color_fixed_hue + ((custom_audio_pulse_inverse_color && this.mode == "explosion") ? 180 : 0)).replace('sat', custom_color_fixed_sat * 100 + '%');
+            this.color = opts.color.replace('hue', custom_color_fixed_hue + ((custom_audio_pulse_inverse_color && this.mode == linemode_explosion) ? 180 : 0)).replace('sat', custom_color_fixed_sat * 100 + '%');
             break;
         case 3:
             this.color = opts.color.replace('hue', 0).replace('sat', '100%');
@@ -537,9 +543,9 @@ Line.prototype.beginPhase = function () {
     this.y += this.addedY;
 
     this.time = 0;
-    if (this.mode == "explosion")
+    if (this.mode == linemode_explosion)
         this.targetTime = ((4 + 2 * Math.random()) / custom_speed_factor) | 0;
-    else if (this.mode == "sporadic")
+    else if (this.mode == linemode_sporadic)
         this.targetTime = ((25 + 25 * Math.random()) / custom_speed_factor) | 0;
     else
         this.targetTime = ((10 + 10 * Math.random()) / custom_speed_factor) | 0;
@@ -548,7 +554,7 @@ Line.prototype.beginPhase = function () {
     var p1 = Math.cos(this.rad + baseRad - tot_rad);
     var p2 = Math.cos(this.rad - baseRad - tot_rad);
     var p = 1.0 * (p1 + 1) / (p1 + p2 + 2);
-    if (this.mode == "sporadic")
+    if (this.mode == linemode_sporadic)
         p = 1.0 * (p1 + 2.5) / (p1 + p2 + 5);
     if ((this.x == this.origin_x && this.y == this.origin_y) || this.cumulativeTime < 2.05*this.targetTime)
         p = 0.5;
@@ -579,10 +585,10 @@ Line.prototype.step = function () {
     // Set decay and brightness
     var decay_factor = Math.exp(-this.cumulativeTime / 90.0 * custom_decay_factor);
     var brightness = ((custom_use_lines ? 20 : 30) + 10 * Math.sin(this.cumulativeTime * this.lightInputMultiplier) + (audio_hf + 0.2 * audio_lf) * 7.0);
-    if (this.mode == "explosion") {
+    if (this.mode == linemode_explosion) {
         decay_factor = Math.exp(-this.cumulativeTime / (custom_use_lines ? 30.0 : 40.0) * custom_decay_factor);
         brightness = (100);
-    } else if (this.mode == "sporadic") {
+    } else if (this.mode == linemode_sporadic) {
         decay_factor = Math.exp(-this.cumulativeTime / 175.0 * custom_decay_factor);
         brightness = (6 + 2 * Math.sin(this.cumulativeTime * this.lightInputMultiplier));
     }
@@ -614,7 +620,7 @@ Line.prototype.step = function () {
     var point_size_normal = point_size * (audio_hf / 40 + 1);
     
     // Adjust position and size
-    if (this.mode == "sporadic") {
+    if (this.mode == linemode_sporadic) {
         this.shaking = 0;
         point_size_normal = point_size;
     }
@@ -624,7 +630,7 @@ Line.prototype.step = function () {
     var this_loc_y = actual_pos_y + Math.cos(this.rad) * this.shaking;
 
     if (custom_color_mode == 3) {
-        this.color = opts.color.replace('hue', ((((this_loc_x+this_loc_y-0)/(h+w-0))*(360-0)+0)*custom_color_rainbow_scale + custom_color_rainbow_offset_speed * tick) + ((custom_audio_pulse_inverse_color && this.mode == "explosion") ? 180 : 0)).replace('sat', '100%');
+        this.color = opts.color.replace('hue', ((((this_loc_x+this_loc_y-0)/(h+w-0))*(360-0)+0)*custom_color_rainbow_scale + custom_color_rainbow_offset_speed * tick) + ((custom_audio_pulse_inverse_color && this.mode == linemode_explosion) ? 180 : 0)).replace('sat', '100%');
     }
     ctx.fillStyle = ctx.shadowColor = this.color.replace('light', brightness);
 
