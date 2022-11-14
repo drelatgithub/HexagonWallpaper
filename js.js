@@ -2,6 +2,7 @@ var w = c2.width = c.width = window.innerWidth;
 var h = c2.height = c.height = window.innerHeight;
 var ctx = c.getContext('2d');
 var ctx2 = c2.getContext('2d');
+var ctx3;
 
 var log_height = 20;
 var log_display_tick = 200;
@@ -44,7 +45,7 @@ var custom_displacement_x = 0.0;
 var custom_displacement_y = 0.0;
 var custom_rotation = 0.0;
 var custom_glowing_factor = 1.0;
-var custom_color_mode = 1; // 1: circulating, 2: fixed, 3: rainbow.
+var custom_color_mode = 1; // 1: circulating, 2: fixed, 3: rainbow, 4: image.
 var custom_color_changing = 1.0;
 var custom_color_changing_old = 1.0;
 var custom_color_fixed_hue;
@@ -129,6 +130,17 @@ bg_img.onload = function(){
         ctx2.drawImage(bg_img,0,0,w,h);
 }
 
+var hex_img = new Image();
+hex_img.onload = function(){
+    if(custom_color_mode == 4){
+        var c3 = document.createElement('canvas');
+        c3.width = w;
+        c3.height = h;
+        ctx3 = c3.getContext('2d');
+        ctx3.drawImage(hex_img, 0, 0);
+    }
+}
+
 var update_globals = function (redraw = false) {
     hex_side_length = 40 * scale_factor * custom_scale_factor;
     point_size = scale_factor * custom_scale_factor * 2 * custom_pattern_size;
@@ -147,6 +159,30 @@ var update_globals = function (redraw = false) {
             ctx.fillRect(0, 0, w, h);
         }
     }
+}
+
+function RGBtoHSL(r, g, b){
+    // rgb to hsl
+    var maxVal = Math.max(r, g, b), minVal = Math.min(r, g, b);
+    var l = 0.5 * (maxVal + minVal);
+    var hue = 0, sat = 0;
+    if(maxVal == minVal){
+        hue = 0;
+    }else if(maxVal == r){
+        hue = 60 * (g-b) / (maxVal - minVal) + ((g<b)? 360 : 0);
+    }else if(maxVal == g){
+        hue = 60 * (b-r) / (maxVal - minVal) + 120;
+    }else{
+        hue = 60 * (r-g) / (maxVal - minVal) + 240;
+    }
+    if (l == 0 || maxVal == minVal){
+        sat = 0;
+    }else if(l <= 0.5){
+        sat = (maxVal - minVal) / (2*l);
+    }else{
+        sat = (maxVal - minVal) / (2 - 2*l);
+    }
+    return [hue, sat, l];
 }
 
 c.onmousemove = function (e) {
@@ -233,31 +269,17 @@ window.wallpaperPropertyListener = {
         if (properties.custom_color_fixed) {
             var custom_color_fixed_temp = properties.custom_color_fixed.value.split(' ');
             var r = parseFloat(custom_color_fixed_temp[0]), g = parseFloat(custom_color_fixed_temp[1]), b = parseFloat(custom_color_fixed_temp[2]);
-            // rgb to hsl
-            var maxVal = Math.max(r, g, b), minVal = Math.min(r, g, b);
-            var l = 0.5 * (maxVal + minVal);
-            if(maxVal == minVal){
-                custom_color_fixed_hue = 0;
-            }else if(maxVal == r){
-                custom_color_fixed_hue = 60 * (g-b) / (maxVal - minVal) + ((g<b)? 360 : 0);
-            }else if(maxVal == g){
-                custom_color_fixed_hue = 60 * (b-r) / (maxVal - minVal) + 120;
-            }else{
-                custom_color_fixed_hue = 60 * (r-g) / (maxVal - minVal) + 240;
-            }
-            if (l == 0 || maxVal == minVal){
-                custom_color_fixed_sat = 0;
-            }else if(l <= 0.5){
-                custom_color_fixed_sat = (maxVal - minVal) / (2*l);
-            }else{
-                custom_color_fixed_sat = (maxVal - minVal) / (2 - 2*l);
-            }
+            custom_color_fixed_hue = RGBtoHSL(r, g, b)[0];
+            custom_color_fixed_sat = RGBtoHSL(r, g, b)[1];
         }
         if (properties.custom_color_rainbow_scale) {
             custom_color_rainbow_scale = properties.custom_color_rainbow_scale.value;
         }
         if (properties.custom_color_rainbow_offset_speed) {
             custom_color_rainbow_offset_speed = properties.custom_color_rainbow_offset_speed.value;
+        }
+        if (properties.custom_color_image) {
+            hex_img.src = "file:///" + properties.custom_color_image.value;
         }
         if (properties.custom_audio_pulse_inverse_color) {
             custom_audio_pulse_inverse_color = properties.custom_audio_pulse_inverse_color.value;
@@ -526,6 +548,9 @@ Line.prototype.reset = function (mode) {
         case 3:
             this.color = opts.color.replace('hue', 0).replace('sat', '100%');
             break;
+        case 4:
+            this.color = opts.color.replace('hue', 0).replace('sat', '100%');
+            break;
     }
     
     this.cumulativeTime = 0;
@@ -625,10 +650,19 @@ Line.prototype.step = function (elapsed) {
     var this_loc_x = actual_pos_x + Math.sin(this.rad) * this.shaking;
     var this_loc_y = actual_pos_y + Math.cos(this.rad) * this.shaking;
 
+    // Set colors for position-based effects
     if (custom_color_mode == 3) {
         this.color = opts.color.replace('hue', ((((this_loc_x+this_loc_y-0)/(h+w-0))*(360-0)+0)*custom_color_rainbow_scale + custom_color_rainbow_offset_speed * tick) + ((custom_audio_pulse_inverse_color && this.mode == linemode_explosion) ? 180 : 0)).replace('sat', '100%');
     }
-    ctx.fillStyle = ctx.shadowColor = this.color.replace('light', brightness);
+    else if (custom_color_mode == 4) {
+        var pixel_x = ((this_loc_x*hex_img.width)/w);
+        var pixel_y = ((this_loc_y*hex_img.height)/h);
+        var data = ctx3.getImageData(pixel_x, pixel_y, 1, 1).data;
+        var pixel_hs = RGBtoHSL(data[0], data[1], data[2]);
+        this.color = opts.color.replace('hue', pixel_hs[0] + ((custom_audio_pulse_inverse_color && this.mode == linemode_explosion) ? 180 : 0)).replace('sat', Math.abs(pixel_hs[1]) * 100 + '%').replace('light', brightness*pixel_hs[2]*0.01);;
+    }
+
+    ctx.fillStyle = ctx.shadowColor = this.color;
 
     if (custom_use_lines) {
         ctx.beginPath();
