@@ -81,6 +81,13 @@
                 "type": "slider",
                 "value": 3
             },
+			"custom_color_image" : 
+			{
+				"condition" : "custom_color_mode.value == 4",
+				"order" : 104,
+				"text" : "ui_custom_color_image",
+				"type" : "file"
+			},
             "custom_color_mode": {
                 "options": [
                     {
@@ -94,6 +101,10 @@
                     {
                         "label": "ui_custom_color_mode_rainbow",
                         "value": 3
+                    },
+					{
+                        "label": "ui_custom_color_mode_image",
+                        "value": 4
                     }
                 ],
                 "order": 103,
@@ -261,10 +272,12 @@
                 "ui_custom_color_fixed": "Hexagon color<br/>",
                 "ui_custom_color_rainbow_scale" : "Rainbow scale",
                 "ui_custom_color_rainbow_offset_speed" : "Rainbow movement speed",
+                "ui_custom_color_image" : "Hexagon color image",
                 "ui_custom_color_mode": "Color mode",
                 "ui_custom_color_mode_circulating": "Circulating",
                 "ui_custom_color_mode_fixed": "Fixed",
                 "ui_custom_color_mode_rainbow" : "Rainbow",
+                "ui_custom_color_mode_image" : "Image",
                 "ui_custom_decay_factor": "Light decay speed %<br/><small>Higher decay speed means lights travel shorter distances.</small>",
                 "ui_custom_displacement_x": "Displacement X %",
                 "ui_custom_displacement_y": "Displacement Y %",
